@@ -13,6 +13,7 @@ class Register():
     teacher: str
     lesson: str
     substitution: bool
+    empty: bool
     rtype: str
     start: datetime.date
     completion: datetime.date

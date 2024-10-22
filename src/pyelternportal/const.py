@@ -1,11 +1,12 @@
 """Elternportal API - constants"""
 
-from typing import Dict, Sequence
+from typing import Dict
 
+DEFAULT_REGISTER_SHOW_EMPTY: bool = False
 DEFAULT_REGISTER_START_MIN: int = -6
 DEFAULT_REGISTER_START_MAX: int = +5
 
-SCHOOL_SUBJECTS: Sequence[Dict[str, str]] = [
+SCHOOL_SUBJECTS: list[Dict[str, str]] = [
     {"Short": "B", "Name": "Biologie"},
     {"Short": "BcP", "Name": "Biologisch-chemisches Praktikum"},
     {"Short": "C", "Name": "Chemie"},

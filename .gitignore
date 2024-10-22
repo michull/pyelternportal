@@ -1,5 +1,12 @@
+# artifacts
+__pycache__
+
+# misc
 .vs/
-__pycache__/
 dist/
+*.pyproj
+*.sln
+
+# Test
 setup.py
 test*.py

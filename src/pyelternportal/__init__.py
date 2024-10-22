@@ -13,7 +13,7 @@ import datetime
 import logging
 import re
 import socket
-from typing import Any, Dict, Sequence
+from typing import Any, Dict
 import urllib.parse
 
 import aiohttp
@@ -21,6 +21,7 @@ import bs4
 import pytz
 
 from .const import (
+    DEFAULT_REGISTER_SHOW_EMPTY,
     DEFAULT_REGISTER_START_MAX,
     DEFAULT_REGISTER_START_MIN,
     SCHOOL_SUBJECTS,
@@ -29,15 +30,18 @@ from .const import (
 from .exception import (
     BadCredentialsException,
     CannotConnectException,
-    PupilListException,
+    StudentListException,
     ResolveHostnameException,
 )
+
+from .school import School
+from .schools import SCHOOLS
 
 from .appointment import Appointment
 from .lesson import Lesson
 from .letter import Letter
 from .poll import Poll
-from .pupil import Pupil
+from .student import Student
 from .register import Register
 from .sicknote import SickNote
 
@@ -45,7 +49,6 @@ _LOGGER = logging.getLogger(__name__)
 
 type ConfigType = Dict[str, str]
 type OptionType = Dict[str, Any]
-type PupilListType = Sequence[Pupil]
 
 
 class ElternPortalAPI:
@@ -75,6 +78,7 @@ class ElternPortalAPI:
         # set_option_register
         self.register_start_min: int = DEFAULT_REGISTER_START_MIN
         self.register_start_max: int = DEFAULT_REGISTER_START_MAX
+        self.register_show_empty: bool = DEFAULT_REGISTER_SHOW_EMPTY
 
         # async_validate_config
         self.ip: str = None
@@ -83,8 +87,8 @@ class ElternPortalAPI:
         self.school_name: str = None
 
         # other
-        self.pupil: Pupil = None
-        self.pupils: Sequence[Pupil] = []
+        self.student: Student = None
+        self.students: list[Student] = []
         self.last_update = None
 
     def set_config(self, school: str, username: str, password: str):
@@ -143,11 +147,13 @@ class ElternPortalAPI:
         self,
         register_start_min: int = DEFAULT_REGISTER_START_MIN,
         register_start_max: int = DEFAULT_REGISTER_START_MAX,
+        register_show_empty: int = DEFAULT_REGISTER_SHOW_EMPTY,
     ) -> None:
         """Initialize the option register."""
 
         self.register_start_min: int = register_start_min
         self.register_start_max: int = register_start_max
+        self.register_show_empty: bool = register_show_empty
 
     def set_option_data(self, option: OptionType) -> None:
         """Initialize the option data."""
@@ -165,9 +171,14 @@ class ElternPortalAPI:
         register_start_max: int = option.get(
             "register_start_max", DEFAULT_REGISTER_START_MAX
         )
+        register_show_empty: int = option.get(
+            "register_show_empty", DEFAULT_REGISTER_SHOW_EMPTY
+        )
 
         self.set_option(appointment, lesson, letter, poll, register, sicknote)
-        self.set_option_register(register_start_min, register_start_max)
+        self.set_option_register(
+            register_start_min, register_start_max, register_show_empty
+        )
 
     async def async_validate_config(self) -> None:
         """Function validate configuration."""
@@ -178,9 +189,9 @@ class ElternPortalAPI:
             self.school_name = "Demo Gymnasium"
 
             # login
-            pupil_id = "demo"
+            student_id = "demo"
             fullname = "Erika Mustermann (1a)"
-            self.pupils = [Pupil(pupil_id, fullname)]
+            self.students = [Student(student_id, fullname)]
             return
 
         _LOGGER.debug("Try to resolve hostname %s", self.hostname)
@@ -201,10 +212,10 @@ class ElternPortalAPI:
         """Elternportal start page."""
         if self.school == "demo":
 
-            pupil_id = "demo"
+            student_id = "demo"
             fullname = "Erika Mustermann (1a)"
-            self.pupil = Pupil(pupil_id, fullname)
-            self.pupils = [self.pupil]
+            self.student = Student(student_id, fullname)
+            self.students = [self.student]
 
             day0 = datetime.datetime.now().date()
             day0 -= datetime.timedelta(days=day0.weekday())
@@ -215,7 +226,7 @@ class ElternPortalAPI:
             day7 = day0 + datetime.timedelta(days=7)
 
             # appointment
-            self.pupil.appointments = [
+            self.student.appointments = [
                 Appointment(
                     appointment_id="id_1",
                     title="Schulaufgabe in Englisch",
@@ -235,10 +246,10 @@ class ElternPortalAPI:
             ]
 
             # lesson
-            self.pupil.lessons = []
+            self.student.lessons = []
 
             # letter
-            self.pupil.letters = [
+            self.student.letters = [
                 Letter(
                     letter_id="1",
                     number="#1",
@@ -252,16 +263,17 @@ class ElternPortalAPI:
             ]
 
             # poll
-            self.pupil.polls = []
+            self.student.polls = []
 
             # register
-            self.pupil.registers = [
+            self.student.registers = [
                 Register(
                     subject="Englisch",
                     short="E",
                     teacher="Herr Mustermann",
                     lesson="single",
                     substitution=False,
+                    empty=False,
                     rtype="homework",
                     start=day0,
                     completion=day2,
@@ -273,6 +285,7 @@ class ElternPortalAPI:
                     teacher="Frau Müller",
                     lesson="double",
                     substitution=True,
+                    empty=False,
                     rtype="homework",
                     start=day1,
                     completion=day4,
@@ -281,7 +294,7 @@ class ElternPortalAPI:
             ]
 
             # sicknote
-            self.pupil.sicknotes = [SickNote(day1, day1, None)]
+            self.student.sicknotes = [SickNote(day1, day1, None)]
 
             self.last_update = datetime.datetime.now()
             return
@@ -291,7 +304,7 @@ class ElternPortalAPI:
             await self.async_base()
             await self.async_login()
 
-            for self.pupil in self.pupils:
+            for self.student in self.students:
                 await self.async_set_child()
 
                 if self.appointment:
@@ -372,37 +385,37 @@ class ElternPortalAPI:
             html = await response.text()
             soup = bs4.BeautifulSoup(html, self.beautiful_soup_parser)
 
-            tag = soup.select_one(".pupil-selector")
+            tag = soup.select_one(".student-selector")
             if tag is None:
                 raise BadCredentialsException()
 
-            self.pupils = []
-            tags = soup.select(".pupil-selector select option")
+            self.students = []
+            tags = soup.select(".student-selector select option")
             if not tags:
-                raise PupilListException()
+                raise StudentListException()
 
             for tag in tags:
                 try:
-                    pupil_id = tag["value"]
+                    student_id = tag["value"]
                 except Exception as e:
                     message = (
-                        "The 'value' atrribute of a pupil option could not be found."
+                        "The 'value' atrribute of a student option could not be found."
                     )
-                    raise PupilListException() from e
+                    raise StudentListException() from e
 
                 try:
                     fullname = tag.get_text().strip()
                 except Exception as e:
-                    message = "The 'text' of a pupil option could not be found."
-                    raise PupilListException() from e
+                    message = "The 'text' of a student option could not be found."
+                    raise StudentListException() from e
 
-                self.pupil = Pupil(pupil_id, fullname)
-                self.pupils.append(self.pupil)
+                self.student = Student(student_id, fullname)
+                self.students.append(self.student)
 
     async def async_set_child(self) -> None:
         """Elternportal set child."""
 
-        url = "/api/set_child.php?id=" + self.pupil.pupil_id
+        url = "/api/set_child.php?id=" + self.student.student_id
         _LOGGER.debug("set_child.url=%s", url)
         async with self.session.post(url) as response:
             if response.status != 200:
@@ -411,7 +424,7 @@ class ElternPortalAPI:
     async def async_appointment(self) -> None:
         """Elternportal appointment."""
 
-        self.pupil.appointments = []
+        self.student.appointments = []
         url = "/api/ws_get_termine.php"
         _LOGGER.debug("appointment.url=%s", url)
         async with self.session.get(url) as response:
@@ -434,12 +447,12 @@ class ElternPortalAPI:
                     start,
                     end,
                 )
-                self.pupil.appointments.append(appointment)
+                self.student.appointments.append(appointment)
 
     async def async_lesson(self) -> None:
         """Elternportal lesson."""
 
-        self.pupil.lessons = []
+        self.student.lessons = []
         url = "/service/stundenplan"
         _LOGGER.debug("lesson.url=%s", url)
         async with self.session.get(url) as response:
@@ -468,12 +481,12 @@ class ElternPortalAPI:
 
                             if subject != "":
                                 lesson = Lesson(weekday, number, subject, room)
-                                self.pupil.lessons.append(lesson)
+                                self.student.lessons.append(lesson)
 
     async def async_letter(self) -> None:
         """Elternportal letter."""
 
-        self.pupil.letters = []
+        self.student.letters = []
         url = "/aktuelles/elternbriefe"
         _LOGGER.debug("letter.url=%s", url)
         async with self.session.get(url) as response:
@@ -556,12 +569,12 @@ class ElternPortalAPI:
                     distribution=distribution,
                     description=description,
                 )
-                self.pupil.letters.append(letter)
+                self.student.letters.append(letter)
 
     async def async_poll(self) -> None:
         """Elternportal poll."""
 
-        self.pupil.polls = []
+        self.student.polls = []
         url = "/aktuelles/umfragen"
         _LOGGER.debug("poll.url=%s", url)
         async with self.session.get(url) as response:
@@ -626,12 +639,12 @@ class ElternPortalAPI:
                     end=end,
                     detail=detail,
                 )
-                self.pupil.polls.append(poll)
+                self.student.polls.append(poll)
 
     async def async_register(self) -> None:
         """Elternportal register."""
 
-        self.pupil.registers = []
+        self.student.registers = []
         date_current = datetime.date.today() + datetime.timedelta(
             days=self.register_start_min
         )
@@ -680,36 +693,42 @@ class ElternPortalAPI:
                     rtype = rtype.replace("Hausaufgabe", "homework")
 
                     lines = table_cells[1].find_all(string=True)
-                    description = lines[0] if len(lines) > 0 else ""
+                    description = lines[0] if len(lines) > 0 else None
 
-                    if description != "Keine Hausaufgabe eingetragen.":
-                        date_completion = date_current
-                        if len(lines) > 2:
-                            match = re.search(r"\d{2}\.\d{2}\.\d{4}", lines[2])
-                            if match:
-                                date_completion = datetime.datetime.strptime(
-                                    match[0], "%d.%m.%Y"
-                                ).date()
+                    empty = (
+                        not description
+                        or description == "Keine Hausaufgabe eingetragen."
+                    )
 
+                    date_completion = date_current
+                    if len(lines) > 2:
+                        match = re.search(r"\d{2}\.\d{2}\.\d{4}", lines[2])
+                        if match:
+                            date_completion = datetime.datetime.strptime(
+                                match[0], "%d.%m.%Y"
+                            ).date()
+
+                    if self.register_show_empty or not empty:
                         register = Register(
                             subject=subject,
                             short=short,
                             teacher=teacher,
                             lesson=lesson,
                             substitution=substitution,
+                            empty=empty,
                             rtype=rtype,
                             start=date_current,
                             completion=date_completion,
                             description=description,
                         )
-                        self.pupil.registers.append(register)
+                        self.student.registers.append(register)
 
             date_current += datetime.timedelta(days=1)
 
     async def async_sicknote(self) -> None:
         """Elternportal sick note."""
 
-        self.pupil.sicknotes = []
+        self.student.sicknotes = []
         url = "/meldungen/krankmeldung"
         _LOGGER.debug("sicknote.url=%s", url)
         async with self.session.get(url) as response:
@@ -763,8 +782,10 @@ class ElternPortalAPI:
                     if len(cells) > 2:
                         comment = cells[2].get_text()
 
+                if comment == "":
+                    comment = None
                 sicknote = SickNote(start, end, comment)
-                self.pupil.sicknotes.append(sicknote)
+                self.student.sicknotes.append(sicknote)
 
     async def async_logout(self) -> None:
         """Elternportal logout."""
@@ -776,3 +797,7 @@ class ElternPortalAPI:
                 message = f"logout.status={response.status}"
                 _LOGGER.exception(message)
                 raise CannotConnectException(message)
+
+    def get_schools(self) -> list[School]:
+        """Elternportal get list of schools."""
+        return SCHOOLS

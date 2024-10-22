@@ -1,9 +1,8 @@
-"""Pupil module"""
+"""Student module"""
 
 # pylint: disable=too-many-instance-attributes
 
 import re
-from typing import Sequence
 
 from .appointment import Appointment
 from .lesson import Lesson
@@ -12,9 +11,9 @@ from .poll import Poll
 from .register import Register
 from .sicknote import SickNote
 
-class Pupil():
-    """Class representing a pupil"""
-    def __init__(self, pupil_id: str, fullname: str):
+class Student():
+    """Class representing a student"""
+    def __init__(self, student_id: str, fullname: str):
 
         try:
             match = re.search(r"^(\S+)\s+(.*)\s+\((\S+)\)$", fullname)
@@ -22,26 +21,26 @@ class Pupil():
             lastname = match[2]
             classname = match[3]
         except TypeError:
-            firstname = f"PID{pupil_id}"
+            firstname = f"S{student_id}"
             lastname = None
             classname = None
 
-        self.pupil_id: str = pupil_id
+        self.student_id: str = student_id
         self.fullname: str = fullname
         self.firstname: str = firstname
         self.lastname: str = lastname
         self.classname: str = classname
 
-        self.appointments: Sequence = []
-        self.lessons: Sequence = []
-        self.letters: Sequence = []
-        self.polls: Sequence = []
-        self.registers: Sequence = []
-        self.sicknotes: Sequence = []
+        self.appointments: list = []
+        self.lessons: list = []
+        self.letters: list = []
+        self.polls: list = []
+        self.registers: list = []
+        self.sicknotes: list = []
 
     def get_id(self) -> str:
-        """Get pupil id"""
-        return self.pupil_id
+        """Get student id"""
+        return self.student_id
 
     def get_fullname(self) -> str:
         """Get full name"""
@@ -62,50 +61,50 @@ class Pupil():
             + len(self.sicknotes)
         )
 
-    def set_appointments(self, appointments: Sequence[Appointment]) -> None:
+    def set_appointments(self, appointments: list[Appointment]) -> None:
         """set list of appointments"""
         self.appointments = appointments
 
-    def get_appointments(self) -> Sequence[Appointment]:
+    def get_appointments(self) -> list[Appointment]:
         """get list of appointments"""
         return self.appointments
 
-    def set_lessons(self, lessons: Sequence[Lesson]) -> None:
+    def set_lessons(self, lessons: list[Lesson]) -> None:
         """set list of lessons"""
         self.lessons = lessons
 
-    def get_lessons(self) -> Sequence[Lesson]:
+    def get_lessons(self) -> list[Lesson]:
         """get list of lessons"""
         return self.lessons
 
-    def set_letters(self, letters: Sequence[Letter]) -> None:
+    def set_letters(self, letters: list[Letter]) -> None:
         """set list of letters"""
         self.letters = letters
 
-    def get_letters(self) -> Sequence[Letter]:
+    def get_letters(self) -> list[Letter]:
         """get list of letters"""
         return self.letters
 
-    def set_polls(self, polls: Sequence[Poll]) -> None:
+    def set_polls(self, polls: list[Poll]) -> None:
         """set list of polls"""
         self.polls = polls
 
-    def get_polls(self) -> Sequence[Poll]:
+    def get_polls(self) -> list[Poll]:
         """get list of polls"""
         return self.polls
 
-    def set_registers(self, registers: Sequence[Register]) -> None:
+    def set_registers(self, registers: list[Register]) -> None:
         """set list of registers"""
         self.registers = registers
 
-    def get_registers(self) -> Sequence[Register]:
+    def get_registers(self) -> list[Register]:
         """get list of registers"""
         return self.registers
 
-    def set_sicknotes(self, sicknotes: Sequence[SickNote]) -> None:
+    def set_sicknotes(self, sicknotes: list[SickNote]) -> None:
         """set list of sicknotes"""
         self.sicknotes = sicknotes
 
-    def get_sicknotes(self) -> Sequence[SickNote]:
+    def get_sicknotes(self) -> list[SickNote]:
         """get list of sicknotes"""
         return self.sicknotes

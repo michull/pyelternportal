@@ -385,28 +385,30 @@ class ElternPortalAPI:
             html = await response.text()
             soup = bs4.BeautifulSoup(html, self.beautiful_soup_parser)
 
-            tag = soup.select_one(".student-selector")
+            tag = soup.select_one(".pupil-selector")
             if tag is None:
-                raise BadCredentialsException()
+                message = "The tag with class 'pupil-selector' could not be found."
+                raise BadCredentialsException(message)
 
             self.students = []
-            tags = soup.select(".student-selector select option")
+            tags = soup.select(".pupil-selector select option")
             if not tags:
-                raise StudentListException()
+                message = "The select options could not be found."
+                raise StudentListException(message)
 
             for tag in tags:
                 try:
                     student_id = tag["value"]
                 except Exception as e:
                     message = (
-                        "The 'value' atrribute of a student option could not be found."
+                        "The 'value' atrribute of a pupil option could not be found."
                     )
                     raise StudentListException() from e
 
                 try:
                     fullname = tag.get_text().strip()
                 except Exception as e:
-                    message = "The 'text' of a student option could not be found."
+                    message = "The 'text' of a pupil option could not be found."
                     raise StudentListException() from e
 
                 self.student = Student(student_id, fullname)
@@ -665,6 +667,7 @@ class ElternPortalAPI:
                 for tag in tags:
                     table_cells = tag.select("th")
                     content = table_cells[1].get_text() if len(table_cells) > 1 else ""
+                    _LOGGER.debug("content=%s", content)
                     subject = None
                     short = None
                     teacher = None

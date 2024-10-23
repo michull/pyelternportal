@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pyelternportal"
-version = "0.0.7"
+version = "0.0.8"
 authors = [
   { name="michull", email="michull@github.com" },
 ]
@@ -38,6 +38,5 @@ exclude = [
     "/tests",
     "/*.pyproj",
     "/*.sln",
-    "/setup.py",
     "/test*.py",
 ]

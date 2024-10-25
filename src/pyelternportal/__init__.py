@@ -1,5 +1,7 @@
 """Elternprotal API"""
 
+from __future__ import annotations
+
 # pylint: disable=too-many-arguments
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-instance-attributes
@@ -9,7 +11,8 @@
 # pylint: disable=too-many-public-methods
 # pylint: disable=too-many-statements
 
-from __future__ import annotations
+version = "0.0.13"
+version_info = (0, 0, 13)
 
 import datetime
 import json
@@ -767,7 +770,7 @@ class ElternPortalAPI:
 
         self.student.registers = []
         date_current = datetime.date.today()
-        await self.async_register_parse(DEMO_HTML_REGISTER, "/", date_current)
+        await self.async_register_parse(DEMO_HTML_REGISTER, date_current)
 
     async def async_register_online(self) -> None:
         """Elternportal register (online)."""
@@ -787,7 +790,7 @@ class ElternPortalAPI:
                 if response.status != 200:
                     _LOGGER.debug("register.status=%s", response.status)
                 html = await response.text()
-                await self.async_register_parse(html, url, date_current)
+                await self.async_register_parse(html, date_current)
 
             date_current += datetime.timedelta(days=1)
 

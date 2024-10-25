@@ -665,7 +665,7 @@ class ElternPortalAPI:
 
     async def async_poll_demo(self) -> None:
         """Elternportal poll (demo)."""
-        await self.async_poll_parse(DEMO_HTML_POLL, "/")
+        await self.async_poll_parse(DEMO_HTML_POLL)
 
     async def async_poll_online(self) -> None:
         """Elternportal poll (online)."""
@@ -676,7 +676,7 @@ class ElternPortalAPI:
             if response.status != 200:
                 _LOGGER.debug("poll.status=%s", response.status)
             html = await response.text()
-            await self.async_poll_parse(html, url)
+            await self.async_poll_parse(html)
 
     async def async_poll_parse(self, html: str) -> None:
         """Elternportal poll (parse)."""

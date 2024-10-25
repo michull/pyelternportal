@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pyelternportal"
-version = "0.0.8"
+version = "0.0.9"
 authors = [
   { name="michull", email="michull@github.com" },
 ]
 description = "API to retrieve data from Eltern-Portal"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 keywords = ["elternportal"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -21,14 +21,15 @@ classifiers = [
     "Programming Language :: Python :: 3.13"
 ]
 dependencies = [
+    "aiohttp>=3.10",
     "beautifulsoup4>=4.12.3",
     "html5lib>=1.1",
     "tzdata>=2024.2",
 ]
 
 [project.urls]
-Homepage = "https://github.com/michull/api-elternportal"
-Issues = "https://github.com/michull/api-elternportal/issues"
+Homepage = "https://github.com/michull/pyelternportal"
+Issues = "https://github.com/michull/pyelternportal/issues"
 
 [tool.hatch.build]
 exclude = [

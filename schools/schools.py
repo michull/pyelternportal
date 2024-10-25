@@ -136,7 +136,9 @@ with open(path_md, mode="w", encoding="utf-8") as fh:
             fh.write(f"{identifier:<10} | {url:<37} | {school}\n")
 
 with open(file=path_py, mode="w", encoding="utf-8") as fh:
-    fh.write('""" Known instances of eltern-portal.org """\n\n')
+    fh.write('"""Known instances of eltern-portal.org"""\n\n')
+    fh.write("# Generated automatically by /schools/schools.py (do not edit)\n\n")
+    fh.write("# pylint: disable=line-too-long\n")
     fh.write("# pylint: disable=too-many-lines\n\n")
     fh.write("from .school import School\n\n")
     fh.write("SCHOOLS = [\n")
@@ -159,6 +161,9 @@ with open(file=path_json, mode="w", encoding="utf-8") as fh:
 
 
 with open(file=path_html, mode="w", encoding="utf-8") as fh:
+    LINK_CSS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    LINK_JS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    LINK_TILE = "https://tile.openstreetmap.org/"
     fh.writelines('<!DOCTYPE html>')
     fh.writelines('<html lang="en">')
     fh.writelines('<head>')
@@ -166,8 +171,8 @@ with open(file=path_html, mode="w", encoding="utf-8") as fh:
     fh.writelines('    <meta charset="utf-8">')
     fh.writelines('    <meta name="viewport" content="width=device-width, initial-scale=1">')
     fh.writelines('    <title>Schools</title>')
-    fh.writelines('    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />')
-    fh.writelines('    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>')
+    fh.writelines(f'    <link rel="stylesheet" href="{LINK_CSS}" />')
+    fh.writelines(f'    <script src="{LINK_JS}"></script>')
     fh.writelines('    <style>')
     fh.writelines('        html, body {')
     fh.writelines('            height: 100%;')
@@ -179,15 +184,18 @@ with open(file=path_html, mode="w", encoding="utf-8") as fh:
     fh.writelines('    <div id="map" style="width: 100%; height: 100%;"></div>')
     fh.writelines('    <script>')
     fh.writelines("        const map = L.map('map').setView([51.163361, 10.447683], 7);")
-    fh.writelines("        const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {")
+    fh.writelines("        const tiles = L.tileLayer('" + LINK_TILE + "{z}/{x}/{y}.png', {")
     fh.writelines("            maxZoom: 19,")
-    fh.writelines("            attribution: '&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>'")
+    fh.writelines("            attribution: '&copy; OpenStreetMap'")
     fh.writelines("        }).addTo(map);")
     for s in data:
         if "geo" in s and s["geo"]:
             geo = s["geo"]
             if "lat" in geo and geo["lat"] and "lon" in geo and geo["lon"]:
-                fh.writelines(f"        const m_{s["school"]} = L.marker([{geo["lat"]}, {geo["lon"]}]).bindTooltip('{s["school"]}: {s["name"]}').addTo(map);")
+                lat = geo["lat"]
+                lon = geo["lon"]
+                fh.writelines(f"        const m_{s["school"]} = L.marker([{lat}, {lon}])")
+                fh.writelines(f"            .bindTooltip('{s["school"]}: {s["name"]}').addTo(map);")
     fh.writelines('    </script>')
     fh.writelines('</body>')
     fh.writelines('</html>')

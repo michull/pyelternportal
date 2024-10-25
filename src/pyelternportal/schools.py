@@ -1,6 +1,9 @@
-""" Known instances of eltern-portal.org """
+"""Known instances of eltern-portal.org"""
+
+# Generated automatically by /schools/schools.py (do not edit)
 
 # pylint: disable=too-many-lines
+# pylint: disable=line-too-long
 
 from .school import School
 

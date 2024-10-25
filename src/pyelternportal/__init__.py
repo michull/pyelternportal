@@ -517,7 +517,7 @@ class ElternPortalAPI:
 
             # attachment
             a = tag.select_one("p:nth-child(4) a")
-            attachment = tag2attachment(a)
+            attachment = tag2attachment(a) if a else None
 
             blackboard = BlackBoard(
                 sent=sent, subject=subject, body=body, attachment=attachment
@@ -695,7 +695,7 @@ class ElternPortalAPI:
                 href = urllib.parse.urljoin("/", tag["href"])
 
             tag = row.select_one("div div:nth-child(1) a[title='Anhang']")
-            attachment = tag2attachment(tag)
+            attachment = tag2attachment(tag) if tag else None
 
             tag = row.select_one("div div:nth-child(2)")
             if tag is None:

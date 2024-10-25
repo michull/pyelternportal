@@ -340,7 +340,7 @@ class ElternPortalAPI:
                 _LOGGER.exception(message)
                 raise CannotConnectException(message)
 
-            self.async_base_parse(html)
+            await self.async_base_parse(html)
 
     async def async_base_parse(self, html: str) -> None:
         """Elternportal base (parse)."""

@@ -63,7 +63,7 @@ Set the required configuration.
 
 | Parameter  | Type  | Description
 | :--------- | :---- | :----------
-| `school`   | `str` | School identifier for Eltern-Portal. A list of valid school identifiers can be found at [SCHOOLS.MD](schools/SCHOOLS.MD)
+| `school`   | `str` | School identifier for Eltern-Portal. A list of valid school identifiers can be found at [SCHOOLS.md](schools/SCHOOLS.md)
 | `username` | `str` | User name of the access data (e.g. e-mail address)
 | `password` | `str` | Password of the access data
 

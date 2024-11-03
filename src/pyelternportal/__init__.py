@@ -11,8 +11,8 @@ from __future__ import annotations
 # pylint: disable=too-many-public-methods
 # pylint: disable=too-many-statements
 
-version = "0.0.13"
-version_info = (0, 0, 13)
+version = "0.0.14"
+version_info = (0, 0, 14)
 
 import datetime
 import json

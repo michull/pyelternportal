@@ -5,7 +5,7 @@ import urllib.parse
 
 from bs4 import Tag
 
-ATYPE_DEFAULT = ""
+ATYPE_DEFAULT = "default"
 ATYPE_REGISTER = "lesson"
 
 

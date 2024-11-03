@@ -86,8 +86,8 @@ class ElternPortalAPI:
         self.school: str = None
         self.username: str = None
         self.password: str = None
-        self._hostname: str = None
-        self._base_url: str = None
+        self.hostname: str = None
+        self.base_url: str = None
 
         # set_option
         self.appointment: bool = False
@@ -139,8 +139,8 @@ class ElternPortalAPI:
         self.school = school
         self.username = username
         self.password = password
-        self._hostname = hostname
-        self._base_url = base_url
+        self.hostname = hostname
+        self.base_url = base_url
 
     def set_config_data(self, config: ConfigType) -> None:
         """Initialize the config data."""
@@ -230,16 +230,16 @@ class ElternPortalAPI:
 
     async def async_validate_config_online(self) -> None:
         """Function validate configuration (online)."""
-        _LOGGER.debug("Try to resolve hostname %s", self._hostname)
+        _LOGGER.debug("Try to resolve hostname %s", self.hostname)
         try:
-            self._ip = socket.gethostbyname(self._hostname)
+            self._ip = socket.gethostbyname(self.hostname)
         except socket.gaierror as sge:
-            message = f"Cannot resolve hostname {self._hostname}"
+            message = f"Cannot resolve hostname {self.hostname}"
             _LOGGER.exception(message)
             raise ResolveHostnameException(message) from sge
         _LOGGER.debug("IP address is %s", self._ip)
 
-        async with aiohttp.ClientSession(self._base_url) as self._session:
+        async with aiohttp.ClientSession(self.base_url) as self._session:
             await self.async_base_online()
             await self.async_login_online()
             await self.async_logout_online()
@@ -288,7 +288,7 @@ class ElternPortalAPI:
     async def async_update_online(self) -> None:
         """Elternportal update (online)."""
 
-        async with aiohttp.ClientSession(self._base_url) as self._session:
+        async with aiohttp.ClientSession(self.base_url) as self._session:
 
             await self.async_base_online()
             await self.async_login_online()
@@ -339,7 +339,7 @@ class ElternPortalAPI:
 
             html = await response.text()
             if "Dieses Eltern-Portal existiert nicht" in html:
-                message = f"The elternportal {self._base_url} does not exist."
+                message = f"The elternportal {self.base_url} does not exist."
                 _LOGGER.exception(message)
                 raise CannotConnectException(message)
 

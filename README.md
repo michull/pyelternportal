@@ -116,6 +116,8 @@ Set the option data via a dictionary object.
 
 | Property      | Type                | Description
 | :------------ | :------------------ | :----------
+| `hostname`    | `str`               | Hostname of the server
+| `base_url`    | `str`               | Base url of the web site
 | `school_name` | `str`               | Name of the school presented on the welcome page
 | `students`    | `list[Student]`     | List of students (or pupils)
 | `last_update` | `datetime.datetime` | Timestamp of the last update of the data above

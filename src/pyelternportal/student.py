@@ -8,6 +8,7 @@ from .appointment import Appointment
 from .blackboard import BlackBoard
 from .lesson import Lesson
 from .letter import Letter
+from .message import Message
 from .poll import Poll
 from .register import Register
 from .sicknote import SickNote
@@ -38,6 +39,7 @@ class Student:
         self.blackboards: list[BlackBoard] = []
         self.lessons: list[Lesson] = []
         self.letters: list[Letter] = []
+        self.messages: list[Message] = []
         self.polls: list[Poll] = []
         self.registers: list[Register] = []
         self.sicknotes: list[SickNote] = []

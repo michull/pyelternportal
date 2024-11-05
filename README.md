@@ -87,6 +87,7 @@ Set the optional configuration.
 | `blackboard`  | `bool` | `False` | Get data of page "aktuelles/schwarzes_brett"?
 | `lesson`      | `bool` | `False` | Get data of page "service/stundenplan"?
 | `letter`      | `bool` | `False` | Get data of page "aktuelles/elternbriefe"?
+| `message`     | `bool` | `False` | Get data of page "meldungen/kommunikation_fachlehrer"?
 | `poll`        | `bool` | `False` | Get data of page "aktuelles/umfragen"?
 | `register`    | `bool` | `False` | Get data of page "service/klassenbuch"?
 | `sicknote`    | `bool` | `False` | Get data of page "meldungen/krankmeldung"?
@@ -138,6 +139,7 @@ Set the option data via a dictionary object.
 | `blackboards`  | `list[BlackBoard]`  | List of black board entries (only if option `blackboard` was set)
 | `lessons`      | `list[Lesson]`      | List of lessons (only if option `lesson` was set)
 | `letters`      | `list[Letter]`      | List of letters (only if option `letter` was set)
+| `messages`     | `list[Message]`     | List of messages (only if option `message` was set)
 | `polls`        | `list[Poll]`        | List of polls (only if option `poll` was set)
 | `registers`    | `list[Register]`    | List of registers (only if option `register` was set)
 | `sicknotes`    | `list[SickNote]`    | List of sick notes (only if option `sicknote` was set)
@@ -184,6 +186,15 @@ Set the option data via a dictionary object.
 | `subject`      | `str`               | Subject
 | `distribution` | `str`               | Distribution
 | `description`  | `str`               | Description
+
+### Message
+
+| Property     | Type                | Description
+| :----------- | :------------------ | :----------
+| `sender`     | `str`               | Sender (teacher)
+| `sent`       | `datetime.datetime` | Date and time
+| `subject`    | `str`               | Subject
+| `body`       | `str`               | Body
 
 ### Poll
 

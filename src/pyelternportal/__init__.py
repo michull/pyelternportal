@@ -48,6 +48,7 @@ from .attachment import Attachment, tag2attachment
 from .blackboard import BlackBoard
 from .lesson import Lesson
 from .letter import Letter
+from .message import Message
 from .poll import Poll
 from .student import Student
 from .register import Register
@@ -60,6 +61,9 @@ from .demo import (
     DEMO_HTML_LETTER,
     DEMO_HTML_LOGIN,
     DEMO_HTML_LOGOUT,
+    DEMO_HTML_MESSAGE,
+    DEMO_HTML_MESSAGE_TEACHER,
+    DEMO_HTML_MESSAGE_DETAIL,
     DEMO_HTML_POLL,
     DEMO_HTML_POLL_DETAIL,
     DEMO_HTML_REGISTER,
@@ -94,6 +98,7 @@ class ElternPortalAPI:
         self.blackboard: bool = False
         self.lesson: bool = False
         self.letter: bool = False
+        self.message: bool = False
         self.poll: bool = False
         self.register: bool = False
         self.sicknote: bool = False
@@ -156,19 +161,21 @@ class ElternPortalAPI:
         blackboard: bool = False,
         lesson: bool = False,
         letter: bool = False,
+        message: bool = False,
         poll: bool = False,
         register: bool = False,
         sicknote: bool = False,
     ) -> None:
         """Initialize the option."""
 
-        self.appointment: bool = appointment
-        self.blackboard: bool = blackboard
-        self.lesson: bool = lesson
-        self.letter: bool = letter
-        self.poll: bool = poll
-        self.register: bool = register
-        self.sicknote: bool = sicknote
+        self.appointment = appointment
+        self.blackboard = blackboard
+        self.lesson = lesson
+        self.letter = letter
+        self.message = message
+        self.poll = poll
+        self.register = register
+        self.sicknote = sicknote
 
     def set_option_data(self, option: OptionType) -> None:
         """Initialize the option data."""
@@ -177,6 +184,7 @@ class ElternPortalAPI:
         blackboard: bool = option.get("blackboard", False)
         lesson: bool = option.get("lesson", False)
         letter: bool = option.get("letter", False)
+        message: bool = option.get("message", False)
         poll: bool = option.get("poll", False)
         register: bool = option.get("register", False)
         sicknote: bool = option.get("sicknote", False)
@@ -192,7 +200,7 @@ class ElternPortalAPI:
         )
 
         self.set_option(
-            appointment, blackboard, lesson, letter, poll, register, sicknote
+            appointment, blackboard, lesson, letter, message, poll, register, sicknote
         )
         self.set_option_register(
             register_start_min, register_start_max, register_show_empty
@@ -206,9 +214,9 @@ class ElternPortalAPI:
     ) -> None:
         """Initialize the option register."""
 
-        self.register_start_min: int = register_start_min
-        self.register_start_max: int = register_start_max
-        self.register_show_empty: bool = register_show_empty
+        self.register_start_min = register_start_min
+        self.register_start_max = register_start_max
+        self.register_show_empty = register_show_empty
 
     async def async_validate_config(self) -> None:
         """Function validate configuration."""
@@ -272,6 +280,9 @@ class ElternPortalAPI:
             if self.letter:
                 await self.async_letter_demo()
 
+            if self.message:
+                await self.async_message_demo()
+
             if self.poll:
                 await self.async_poll_demo()
 
@@ -307,6 +318,9 @@ class ElternPortalAPI:
 
                 if self.letter:
                     await self.async_letter_online()
+
+                if self.message:
+                    await self.async_message_online()
 
                 if self.poll:
                     await self.async_poll_online()
@@ -560,7 +574,7 @@ class ElternPortalAPI:
                 # time = lines[1] if len(lines) > 1 else ""
 
                 # Column 1-5: Monday to Friday
-                for weekday in range(1, 5):
+                for weekday in range(1, 6):
                     span = table_cells[weekday].select_one("span span")
                     if span:
                         lines = span.find_all(string=True)
@@ -647,10 +661,9 @@ class ElternPortalAPI:
                 lines = cell.find_all(string=True)
                 description = ""
                 skip = True
-                for i in range(1, len(lines)):
-                    line = lines[i].replace("\r", "").replace("\n", "")
+                for line in lines:
                     if not skip:
-                        description += line + "\n"
+                        description += line.replace("\r", "").replace("\n", "") + "\n"
                     if line.startswith("Klasse/n: "):
                         skip = False
 
@@ -665,6 +678,137 @@ class ElternPortalAPI:
                 description=description,
             )
             self._student.letters.append(letter)
+
+    async def async_message_demo(self) -> None:
+        """Elternportal message (demo)."""
+        await self.async_message_parse(DEMO_HTML_MESSAGE)
+
+    async def async_message_online(self) -> None:
+        """Elternportal message (online)."""
+
+        url = "/meldungen/kommunikation_fachlehrer"
+        _LOGGER.debug("message.url=%s", url)
+        async with self._session.get(url) as response:
+            if response.status != 200:
+                _LOGGER.debug("message.status=%s", response.status)
+            html = await response.text()
+            await self.async_message_parse(html)
+
+    async def async_message_parse(self, html: str) -> None:
+        """Elternportal message (parse)."""
+
+        self._student.messages = []
+        soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
+
+        rows = soup.select(
+            "#asam_content div.table-responsive:nth-child(2) table.table2 tr"
+        )
+        for row in rows:
+            tag = row.select_one("tr td:nth-child(4) a")
+            if tag is None:
+                href = None
+            else:
+                href = urllib.parse.urljoin("/", tag["href"])
+                _LOGGER.debug(f"href={href}")
+
+            if href is None:
+                pass
+            else:
+                if self._demo:
+                    await self.async_message_teacher_demo()
+                else:
+                    await self.async_message_teacher_online(href)
+
+    async def async_message_teacher_demo(self) -> None:
+        """Elternportal message teacher (demo)."""
+        await self.async_message_teacher_parse(DEMO_HTML_MESSAGE_TEACHER)
+
+    async def async_message_teacher_online(self, url) -> None:
+        """Elternportal message teacher (online)."""
+
+        _LOGGER.debug("message.teacher.url=%s", url)
+        async with self._session.get(url) as response:
+            if response.status != 200:
+                _LOGGER.debug("message.teacher.status=%s", response.status)
+            html = await response.text()
+            await self.async_message_teacher_parse(html)
+
+    async def async_message_teacher_parse(self, html: str) -> None:
+        """Elternportal message teacher (parse)."""
+
+        soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
+
+        tags = soup.select(
+            "#asam_content a.btn.btn-default.btn-block[href^='meldungen/kommunikation_fachlehrer/']"
+        )
+        for tag in tags:
+            href = urllib.parse.urljoin("/", tag["href"])
+            _LOGGER.debug(f"href={href}")
+
+            if href is None:
+                sender = None
+                subject = None
+                body = None
+            else:
+                sent = None
+                label = tag.parent.parent.select_one("label")
+                if label:
+                    match = re.search(r"\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}",label.get_text())
+                    if match:
+                        sent = datetime.datetime.strptime(match[0], "%d.%m.%Y %H:%M")
+                        _LOGGER.debug(f"sent={sent}")
+
+                if self._demo:
+                    (sender, subject, body) = await self.async_message_detail_demo()
+                else:
+                    (sender, subject, body) = await self.async_message_detail_online(href)
+
+                message = Message(
+                    sender=sender,
+                    sent=sent,
+                    subject=subject,
+                    body=body,
+                )
+                self._student.messages.append(message)
+
+    async def async_message_detail_demo(self) -> tuple[str, str, str]:
+        """Elternportal message detail (demo)."""
+        (sender, subject, body) = await self.async_message_detail_parse(
+            DEMO_HTML_MESSAGE_DETAIL
+        )
+        return (sender, subject, body)
+
+    async def async_message_detail_online(self, url: str) -> tuple[str, str, str]:
+        """Elternportal message detail (online)."""
+
+        _LOGGER.debug("message.detail.url=%s", url)
+        async with self._session.get(url) as response:
+            if response.status != 200:
+                _LOGGER.debug("message.detail.status=%s", response.status)
+            html = await response.text()
+
+            (sender, subject, body) = await self.async_message_detail_parse(html)
+            return (sender, subject, body)
+
+    async def async_message_detail_parse(self, html: str) -> tuple[str, str, str]:
+        """Elternportal message detail (parse)."""
+
+        soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
+
+        tag = soup.select_one("#asam_content div.row:nth-child(2) div:nth-child(2)")
+        subject = tag.get_text() if tag else None
+        _LOGGER.debug(f"subject={subject}")
+
+        tag = soup.select_one("#asam_content div.row label span")
+        sender = tag.get_text() if tag else None
+        _LOGGER.debug(f"sender={sender}")
+
+        tag = soup.select_one(
+            "#asam_content div.row div.form-control.arch_kom"
+        )
+        body = tag.get_text() if tag else None
+        _LOGGER.debug(f"body={body}")
+        return (sender, subject, body)
 
     async def async_poll_demo(self) -> None:
         """Elternportal poll (demo)."""

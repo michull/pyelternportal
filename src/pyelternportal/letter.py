@@ -15,4 +15,4 @@ class Letter():
     attachment: bool
     subject: str
     distribution: str
-    description: str
+    body: str

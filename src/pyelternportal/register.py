@@ -17,4 +17,4 @@ class Register():
     rtype: str
     start: datetime.date
     completion: datetime.date
-    description: str
+    body: str

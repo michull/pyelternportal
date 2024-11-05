@@ -9,6 +9,7 @@ from pyelternportal.attachment import Attachment
 class BlackBoard():
     """Class representing a black board"""
     sent: datetime.date
+    new: bool
     subject: str
     body: str
     attachment: Attachment

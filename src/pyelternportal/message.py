@@ -8,5 +8,6 @@ class Message:
     """Class representing a message"""
     sender: str
     sent: datetime.datetime
+    new: bool
     subject: str
     body: str

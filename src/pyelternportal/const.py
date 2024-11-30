@@ -1,10 +1,19 @@
 """Elternportal API - constants"""
 
+import logging
 from typing import Dict
 
+LOGGER = logging.getLogger(__name__)
+
+DEFAULT_BLACKBOARD_TRESHOLD: int = -7
+DEFAULT_LETTER_TRESHOLD: int = -7
+DEFAULT_MESSAGE_TRESHOLD: int = -7
+DEFAULT_POLL_TRESHOLD: int = 0
 DEFAULT_REGISTER_SHOW_EMPTY: bool = False
 DEFAULT_REGISTER_START_MIN: int = -6
 DEFAULT_REGISTER_START_MAX: int = +5
+DEFAULT_REGISTER_TRESHOLD: int = +1
+DEFAULT_SICKNOTE_TRESHOLD: int = -7
 
 SCHOOL_SUBJECTS: list[Dict[str, str]] = [
     {"Short": "B", "Name": "Biologie"},

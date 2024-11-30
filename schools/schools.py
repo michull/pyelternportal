@@ -9,7 +9,7 @@ import sys
 import time
 
 import bs4
-import geopy
+from geopy import geocoders
 import requests
 
 SLEEP_TIME = 5 # seconds
@@ -22,7 +22,7 @@ path_md: str = os.path.join(directory, "SCHOOLS.md")
 path_py: str = os.path.join(parent, "src", "pyelternportal", "schools.py")
 
 year_month = datetime.date.today().isoformat()[:8]
-geolocator = geopy.geocoders.Nominatim(user_agent="pyelternportal")
+geolocator = geocoders.Nominatim(user_agent="pyelternportal")
 
 with open(path_json, mode="r", encoding="utf-8") as read_file:
     data = json.load(read_file)

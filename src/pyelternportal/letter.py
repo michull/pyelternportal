@@ -2,15 +2,15 @@
 
 # pylint: disable=too-many-instance-attributes
 
-import dataclasses
-import datetime
+from dataclasses import dataclass
+from datetime import datetime
 
-@dataclasses.dataclass
+@dataclass
 class Letter():
     """Class representing a letter"""
     letter_id: str
     number: str
-    sent: datetime.datetime
+    sent: datetime
     new: bool
     attachment: bool
     subject: str

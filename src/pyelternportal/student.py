@@ -3,6 +3,7 @@
 # pylint: disable=too-many-instance-attributes
 
 import re
+from typing import Any
 
 from .appointment import Appointment
 from .blackboard import BlackBoard
@@ -43,3 +44,49 @@ class Student:
         self.polls: list[Poll] = []
         self.registers: list[Register] = []
         self.sicknotes: list[SickNote] = []
+
+    def get_list(self, key: str) -> list[Any] | None:
+        """Get list of elements"""
+        match key:
+            case "appointments":
+                result: list[Appointment] = self.appointments
+            case "blackboards":
+                result: list[BlackBoard] = self.blackboards
+            case "lessons":
+                result: list[Lesson] = self.lessons
+            case "letters":
+                result: list[Letter] = self.letters
+            case "messages":
+                result: list[Message] = self.messages
+            case "polls":
+                result: list[Poll] = self.polls
+            case "registers":
+                result: list[Register] = self.registers
+            case "sicknotes":
+                result: list[SickNote] = self.sicknotes
+            case _:
+                result = None
+        return result
+
+    def get_list_len(self, key: str) -> int | None:
+        """Get number of elements"""
+        match key:
+            case "appointments":
+                result: int = len(self.appointments)
+            case "blackboards":
+                result: int = len(self.blackboards)
+            case "lessons":
+                result: int = len(self.lessons)
+            case "letters":
+                result: int = len(self.letters)
+            case "messages":
+                result: int = len(self.messages)
+            case "polls":
+                result: int = len(self.polls)
+            case "registers":
+                result: int = len(self.registers)
+            case "sicknotes":
+                result: int = len(self.sicknotes)
+            case _:
+                result = None
+        return result

@@ -1,11 +1,11 @@
 """ Sick note module """
 
-import dataclasses
-import datetime
+from dataclasses import dataclass
+from datetime import date
 
-@dataclasses.dataclass
+@dataclass
 class SickNote():
     """Class representing a sick note"""
-    start: datetime.date
-    end: datetime.date
+    start: date
+    end: date
     comment: str

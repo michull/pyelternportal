@@ -11,25 +11,28 @@ from __future__ import annotations
 # pylint: disable=too-many-public-methods
 # pylint: disable=too-many-statements
 
-version = "0.0.15"
-version_info = (0, 0, 15)
-
-import datetime
+from datetime import date, datetime, timedelta
 import json
-import logging
 import re
 import socket
 from typing import Any, Dict
-import urllib.parse
+from urllib import parse
 
 import aiohttp
 import aiozoneinfo
 import bs4
 
 from .const import (
+    DEFAULT_BLACKBOARD_TRESHOLD,
+    DEFAULT_LETTER_TRESHOLD,
+    DEFAULT_MESSAGE_TRESHOLD,
+    DEFAULT_POLL_TRESHOLD,
+    DEFAULT_REGISTER_TRESHOLD,
     DEFAULT_REGISTER_SHOW_EMPTY,
     DEFAULT_REGISTER_START_MAX,
     DEFAULT_REGISTER_START_MIN,
+    DEFAULT_SICKNOTE_TRESHOLD,
+    LOGGER,
     SCHOOL_SUBJECTS,
 )
 
@@ -71,10 +74,8 @@ from .demo import (
     DEMO_JSON_APPOINTMENT,
 )
 
-_LOGGER = logging.getLogger(__name__)
-
-type ConfigType = Dict[str, str]
-type OptionType = Dict[str, Any]
+VERSION = "0.0.16"
+VERSION_INFO = (0, 0, 16)
 
 
 class ElternPortalAPI:
@@ -103,6 +104,14 @@ class ElternPortalAPI:
         self.poll: bool = False
         self.register: bool = False
         self.sicknote: bool = False
+
+        # set_option_treshold
+        self.blackboard_treshold: int = DEFAULT_BLACKBOARD_TRESHOLD
+        self.letter_treshold: int = DEFAULT_LETTER_TRESHOLD
+        self.message_treshold: int = DEFAULT_MESSAGE_TRESHOLD
+        self.poll_treshold: int = DEFAULT_POLL_TRESHOLD
+        self.register_treshold: int = DEFAULT_REGISTER_TRESHOLD
+        self.sicknote_treshold: int = DEFAULT_SICKNOTE_TRESHOLD
 
         # set_option_register
         self.register_start_min: int = DEFAULT_REGISTER_START_MIN
@@ -147,7 +156,7 @@ class ElternPortalAPI:
         self.hostname = hostname
         self.base_url = base_url
 
-    def set_config_data(self, config: ConfigType) -> None:
+    def set_config_data(self, config: Dict[str, str]) -> None:
         """Initialize the config data."""
 
         school = config.get("school")
@@ -177,7 +186,7 @@ class ElternPortalAPI:
         self.register = register
         self.sicknote = sicknote
 
-    def set_option_data(self, option: OptionType) -> None:
+    def set_option_data(self, option: Dict[str, Any]) -> None:
         """Initialize the option data."""
 
         appointment: bool = option.get("appointment", False)
@@ -188,6 +197,19 @@ class ElternPortalAPI:
         poll: bool = option.get("poll", False)
         register: bool = option.get("register", False)
         sicknote: bool = option.get("sicknote", False)
+
+        blackboard_treshold: int = option.get(
+            "blackboard_treshold", DEFAULT_BLACKBOARD_TRESHOLD
+        )
+        letter_treshold: int = option.get("letter_treshold", DEFAULT_LETTER_TRESHOLD)
+        message_treshold: int = option.get("message_treshold", DEFAULT_MESSAGE_TRESHOLD)
+        poll_treshold: int = option.get("poll_treshold", DEFAULT_POLL_TRESHOLD)
+        register_treshold: int = option.get(
+            "register_treshold", DEFAULT_REGISTER_TRESHOLD
+        )
+        sicknote_treshold: int = option.get(
+            "sicknote_treshold", DEFAULT_SICKNOTE_TRESHOLD
+        )
 
         register_start_min: int = option.get(
             "register_start_min", DEFAULT_REGISTER_START_MIN
@@ -202,9 +224,37 @@ class ElternPortalAPI:
         self.set_option(
             appointment, blackboard, lesson, letter, message, poll, register, sicknote
         )
-        self.set_option_register(
-            register_start_min, register_start_max, register_show_empty
+        self.set_option_treshold(
+            blackboard_treshold,
+            letter_treshold,
+            message_treshold,
+            poll_treshold,
+            register_treshold,
+            sicknote_treshold,
         )
+        self.set_option_register(
+            register_start_min,
+            register_start_max,
+            register_show_empty,
+        )
+
+    def set_option_treshold(
+        self,
+        blackboard_treshold: int = DEFAULT_BLACKBOARD_TRESHOLD,
+        letter_treshold: int = DEFAULT_LETTER_TRESHOLD,
+        message_treshold: int = DEFAULT_MESSAGE_TRESHOLD,
+        poll_treshold: int = DEFAULT_POLL_TRESHOLD,
+        register_treshold: int = DEFAULT_REGISTER_TRESHOLD,
+        sicknote_treshold: int = DEFAULT_SICKNOTE_TRESHOLD,
+    ) -> None:
+        """Initialize the option treshold."""
+
+        self.blackboard_treshold = blackboard_treshold
+        self.letter_treshold = letter_treshold
+        self.message_treshold = message_treshold
+        self.poll_treshold = poll_treshold
+        self.register_treshold = register_treshold
+        self.sicknote_treshold = sicknote_treshold
 
     def set_option_register(
         self,
@@ -217,6 +267,27 @@ class ElternPortalAPI:
         self.register_start_min = register_start_min
         self.register_start_max = register_start_max
         self.register_show_empty = register_show_empty
+
+    def get_option(self, sensor_key: str) -> bool:
+        """Get option"""
+        result: bool = False
+        if sensor_key == "appointment":
+            result: bool = self.appointment
+        if sensor_key == "blackboard":
+            result: bool = self.blackboard
+        if sensor_key == "lesson":
+            result: bool = self.lesson
+        if sensor_key == "letter":
+            result: bool = self.letter
+        if sensor_key == "message":
+            result: bool = self.message
+        if sensor_key == "poll":
+            result: bool = self.poll
+        if sensor_key == "register":
+            result: bool = self.register
+        if sensor_key == "sicknote":
+            result: bool = self.sicknote
+        return result
 
     async def async_validate_config(self) -> None:
         """Function validate configuration."""
@@ -238,14 +309,14 @@ class ElternPortalAPI:
 
     async def async_validate_config_online(self) -> None:
         """Function validate configuration (online)."""
-        _LOGGER.debug("Try to resolve hostname %s", self.hostname)
+        LOGGER.debug("Try to resolve hostname %s", self.hostname)
         try:
             self._ip = socket.gethostbyname(self.hostname)
         except socket.gaierror as sge:
             message = f"Cannot resolve hostname {self.hostname}"
-            _LOGGER.exception(message)
+            LOGGER.exception(message)
             raise ResolveHostnameException(message) from sge
-        _LOGGER.debug("IP address is %s", self._ip)
+        LOGGER.debug("IP address is %s", self._ip)
 
         await self.async_base_online()
         await self.async_login_online()
@@ -293,7 +364,7 @@ class ElternPortalAPI:
 
         self._student = None
         await self.async_logout_demo()
-        self.last_update = datetime.datetime.now()
+        self.last_update = datetime.now()
 
     async def async_update_online(self) -> None:
         """Elternportal update (online)."""
@@ -330,7 +401,7 @@ class ElternPortalAPI:
 
         self._student = None
         await self.async_logout_online()
-        self.last_update = datetime.datetime.now()
+        self.last_update = datetime.now()
 
     async def async_base_demo(self) -> None:
         """Elternportal base (demo)."""
@@ -340,18 +411,18 @@ class ElternPortalAPI:
     async def async_base_online(self) -> None:
         """Elternportal base (online)."""
 
-        url = urllib.parse.urljoin(self.base_url, "/")
-        _LOGGER.debug("base.url=%s", url)
+        url = parse.urljoin(self.base_url, "/")
+        LOGGER.debug("base.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
                 message = f"base.status={response.status}"
-                _LOGGER.exception(message)
+                LOGGER.exception(message)
                 raise CannotConnectException(message)
 
             html = await response.text()
             if "Dieses Eltern-Portal existiert nicht" in html:
                 message = f"The elternportal {self.base_url} does not exist."
-                _LOGGER.exception(message)
+                LOGGER.exception(message)
                 raise CannotConnectException(message)
 
             await self.async_base_parse(html)
@@ -367,7 +438,7 @@ class ElternPortalAPI:
             self._csrf = csrf
         except TypeError as te:
             message = "The 'input' tag with the name 'csrf' could not be found."
-            _LOGGER.exception(message)
+            LOGGER.exception(message)
             raise CannotConnectException(message) from te
 
         try:
@@ -376,7 +447,7 @@ class ElternPortalAPI:
             self.school_name = school_name
         except TypeError as te:
             message = "The 'h2' tag with the id 'schule' could not be found."
-            _LOGGER.exception(message)
+            LOGGER.exception(message)
             raise CannotConnectException(message) from te
 
     async def async_login_demo(self) -> None:
@@ -388,8 +459,8 @@ class ElternPortalAPI:
         """Elternportal login (online)."""
 
         url_path = "/includes/project/auth/login.php"
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("login.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("login.url=%s", url)
         login_data = {
             "csrf": self._csrf,
             "username": self.username,
@@ -399,7 +470,7 @@ class ElternPortalAPI:
         async with self._session.post(url, data=login_data) as response:
             if response.status != 200:
                 message = f"login.status={response.status}"
-                _LOGGER.exception(message)
+                LOGGER.exception(message)
                 raise CannotConnectException(message)
 
             html = await response.text()
@@ -443,12 +514,13 @@ class ElternPortalAPI:
     async def async_set_child_online(self) -> None:
         """Elternportal set child (online)."""
 
-        url_path = "/api/set_child.php?id=" + self._student.student_id
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("set_child.url=%s", url)
+        url_path = "/api/set_child.php?id="
+        url_path += self._student.student_id
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("set_child.url=%s", url)
         async with self._session.post(url) as response:
             if response.status != 200:
-                _LOGGER.debug("set_child.status=%s", response.status)
+                LOGGER.debug("set_child.status=%s", response.status)
 
     async def async_appointment_demo(self) -> None:
         """Elternportal appointment (demo)."""
@@ -459,11 +531,11 @@ class ElternPortalAPI:
         """Elternportal appointment (online)."""
 
         url_path = "/api/ws_get_termine.php"
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("appointment.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("appointment.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
-                _LOGGER.debug("appointment.status=%s", response.status)
+                LOGGER.debug("appointment.status=%s", response.status)
 
             # process malformed JSON response with parameter content_type
             appointments = await response.json(content_type="text/html")
@@ -473,23 +545,30 @@ class ElternPortalAPI:
         """Elternportal appointment (parse)."""
 
         self._student.appointments = []
-        timezone = await aiozoneinfo.async_get_time_zone(self._timezone_str)
-        if appointments["success"] == 1:
-            for result in appointments["result"]:
-                start = int(str(result["start"])[0:-3])
-                start = datetime.datetime.fromtimestamp(start, timezone).date()
-                end = int(str(result["end"])[0:-3])
-                end = datetime.datetime.fromtimestamp(end, timezone).date()
+        if appointments["success"] == 0:
+            return
 
-                appointment = Appointment(
-                    result["id"],
-                    result["title"],
-                    result["title_short"],
-                    result["class"],
-                    start,
-                    end,
-                )
-                self._student.appointments.append(appointment)
+        timezone = await aiozoneinfo.async_get_time_zone(self._timezone_str)
+
+        for result in appointments["result"]:
+            start = int(str(result["start"])[0:-3])
+            start = datetime.fromtimestamp(start, timezone).date()
+            end = int(str(result["end"])[0:-3])
+            end = datetime.fromtimestamp(end, timezone).date()
+
+            appointment = Appointment(
+                result["id"],
+                result["title"],
+                result["title_short"],
+                result["class"],
+                start,
+                end,
+            )
+            self._student.appointments.append(appointment)
+
+        self._student.appointments.sort(
+            key=lambda appointment: (appointment.start, appointment.end)
+        )
 
     async def async_blackboard_demo(self) -> None:
         """Elternportal blackboard (demo)."""
@@ -499,11 +578,11 @@ class ElternPortalAPI:
         """Elternportal blackboard (online)."""
 
         url_path = "/aktuelles/schwarzes_brett"
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("blackboard.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("blackboard.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
-                _LOGGER.debug("blackboard.status=%s", response.status)
+                LOGGER.debug("blackboard.status=%s", response.status)
             html = await response.text()
             await self.async_blackboard_parse(html)
 
@@ -511,6 +590,7 @@ class ElternPortalAPI:
         """Elternportal blackboard."""
 
         self._student.blackboards = []
+        treshold = date.today() + timedelta(days=self.blackboard_treshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         tags = soup.select("#asam_content .grid .grid-item .well")
@@ -523,21 +603,11 @@ class ElternPortalAPI:
                     r"eingestellt am (\d{2}\.\d{2}\.\d{4}) \d{2}:\d{2}:\d{2}",
                     p1.get_text(),
                 )
-                sent = (
-                    datetime.datetime.strptime(match[1], "%d.%m.%Y").date()
-                    if match
-                    else None
-                )
-
-            new = (
-                sent > datetime.datetime.now().date() - datetime.timedelta(days=5)
-                if sent
-                else False
-            )
+                sent = datetime.strptime(match[1], "%d.%m.%Y").date() if match else None
 
             # subject
             h4 = tag.select_one("h4:nth-child(2)")
-            subject = h4.get_text() if h4 else None
+            subject = h4.get_text().strip() if h4 else None
 
             # body
             p2 = tag.select_one("p:nth-child(3)")
@@ -547,10 +617,16 @@ class ElternPortalAPI:
             a = tag.select_one("p:nth-child(4) a")
             attachment: Attachment = tag2attachment(a) if a else None
 
-            blackboard = BlackBoard(
-                sent=sent, new=new, subject=subject, body=body, attachment=attachment
-            )
-            self._student.blackboards.append(blackboard)
+            if sent >= treshold:
+                blackboard = BlackBoard(
+                    sent=sent,
+                    subject=subject,
+                    body=body,
+                    attachment=attachment,
+                )
+                self._student.blackboards.append(blackboard)
+
+        self._student.blackboards.sort(key=lambda blackboard: blackboard.sent)
 
     async def async_lesson_demo(self) -> None:
         """Elternportal lesson (demo)."""
@@ -561,11 +637,11 @@ class ElternPortalAPI:
         """Elternportal lesson (online)."""
 
         url_path = "/service/stundenplan"
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("lesson.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("lesson.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
-                _LOGGER.debug("lesson.status=%s", response.status)
+                LOGGER.debug("lesson.status=%s", response.status)
             html = await response.text()
             await self.async_lesson_parse(html)
 
@@ -597,6 +673,8 @@ class ElternPortalAPI:
                             lesson = Lesson(weekday, number, subject, room)
                             self._student.lessons.append(lesson)
 
+        self._student.lessons.sort(key=lambda lesson: (lesson.weekday, lesson.number))
+
     async def async_letter_demo(self) -> None:
         """Elternportal letter (demo)."""
         await self.async_letter_parse(DEMO_HTML_LETTER)
@@ -605,11 +683,11 @@ class ElternPortalAPI:
         """Elternportal letter (online)."""
 
         url_path = "/aktuelles/elternbriefe"
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("letter.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("letter.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
-                _LOGGER.debug("letter.status=%s", response.status)
+                LOGGER.debug("letter.status=%s", response.status)
             html = await response.text()
             await self.async_letter_parse(html)
 
@@ -617,6 +695,7 @@ class ElternPortalAPI:
         """Elternportal letter."""
 
         self._student.letters = []
+        treshold = datetime.now() + timedelta(days=self.letter_treshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         tags = soup.select(".link_nachrichten")
@@ -630,11 +709,7 @@ class ElternPortalAPI:
 
             # sent
             match = re.search(r"\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}:\d{2}", tag.get_text())
-            sent = (
-                datetime.datetime.strptime(match[0], "%d.%m.%Y %H:%M:%S")
-                if match
-                else None
-            )
+            sent = datetime.strptime(match[0], "%d.%m.%Y %H:%M:%S") if match else None
 
             # new + number
             cell = soup.find("td", {"id": "empf_" + letter_id})
@@ -647,11 +722,11 @@ class ElternPortalAPI:
                 if cell2 is None:
                     number = "???"
                 else:
-                    number = cell2.get_text()
+                    number = cell2.get_text().strip()
 
             # subject
             cell = tag.find("h4")
-            subject = cell.get_text() if cell else None
+            subject = cell.get_text().strip() if cell else None
 
             # distribution + body
             cell = tag.parent
@@ -677,17 +752,20 @@ class ElternPortalAPI:
                     if line.startswith("Klasse/n: "):
                         skip = False
 
-            letter = Letter(
-                letter_id=letter_id,
-                number=number,
-                sent=sent,
-                new=new,
-                attachment=attachment,
-                subject=subject,
-                distribution=distribution,
-                body=body,
-            )
-            self._student.letters.append(letter)
+            if new or sent >= treshold:
+                letter = Letter(
+                    letter_id=letter_id,
+                    number=number,
+                    sent=sent,
+                    new=new,
+                    attachment=attachment,
+                    subject=subject,
+                    distribution=distribution,
+                    body=body,
+                )
+                self._student.letters.append(letter)
+
+        self._student.letters.sort(key=lambda letter: letter.sent)
 
     async def async_message_demo(self) -> None:
         """Elternportal message (demo)."""
@@ -697,11 +775,11 @@ class ElternPortalAPI:
         """Elternportal message (online)."""
 
         url_path = "/meldungen/kommunikation_fachlehrer"
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("message.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("message.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
-                _LOGGER.debug("message.status=%s", response.status)
+                LOGGER.debug("message.status=%s", response.status)
             html = await response.text()
             await self.async_message_parse(html)
 
@@ -716,7 +794,7 @@ class ElternPortalAPI:
         )
         for row in rows:
             tag = row.select_one("tr td:nth-child(3) a")
-            href = urllib.parse.urljoin("/", tag["href"]) if tag else None
+            href = parse.urljoin("/", tag["href"]) if tag else None
 
             if href is None:
                 pass
@@ -733,24 +811,25 @@ class ElternPortalAPI:
     async def async_message_teacher_online(self, url_path) -> None:
         """Elternportal message teacher (online)."""
 
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("message.teacher.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("message.teacher.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
-                _LOGGER.debug("message.teacher.status=%s", response.status)
+                LOGGER.debug("message.teacher.status=%s", response.status)
             html = await response.text()
             await self.async_message_teacher_parse(html)
 
     async def async_message_teacher_parse(self, html: str) -> None:
         """Elternportal message teacher (parse)."""
 
+        treshold = datetime.now() + timedelta(days=self.message_treshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         tags = soup.select(
             "#asam_content a.btn.btn-default.btn-block[href^='meldungen/kommunikation_fachlehrer/']"
         )
         for tag in tags:
-            href = urllib.parse.urljoin("/", tag["href"])
+            href = parse.urljoin("/", tag["href"])
 
             if href is None:
                 sent = None
@@ -766,16 +845,10 @@ class ElternPortalAPI:
                         r"\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}", label.get_text()
                     )
                     sent = (
-                        datetime.datetime.strptime(match[0], "%d.%m.%Y %H:%M")
-                        if match
-                        else None
+                        datetime.strptime(match[0], "%d.%m.%Y %H:%M") if match else None
                     )
 
-                new = (
-                    sent > datetime.datetime.now() - datetime.timedelta(days=3)
-                    if sent
-                    else False
-                )
+                new = False  # FixMe
 
                 if self._demo:
                     (sender, subject, body) = await self.async_message_detail_demo()
@@ -784,14 +857,17 @@ class ElternPortalAPI:
                         href
                     )
 
-                message = Message(
-                    sender=sender,
-                    sent=sent,
-                    new=new,
-                    subject=subject,
-                    body=body,
-                )
-                self._student.messages.append(message)
+                if sent >= treshold:
+                    message = Message(
+                        sender=sender,
+                        sent=sent,
+                        new=new,
+                        subject=subject,
+                        body=body,
+                    )
+                    self._student.messages.append(message)
+
+        self._student.messages.sort(key=lambda message: message.sent)
 
     async def async_message_detail_demo(self) -> tuple[str, str, str]:
         """Elternportal message detail (demo)."""
@@ -803,11 +879,11 @@ class ElternPortalAPI:
     async def async_message_detail_online(self, url_path: str) -> tuple[str, str, str]:
         """Elternportal message detail (online)."""
 
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("message.detail.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("message.detail.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
-                _LOGGER.debug("message.detail.status=%s", response.status)
+                LOGGER.debug("message.detail.status=%s", response.status)
             html = await response.text()
 
             (sender, subject, body) = await self.async_message_detail_parse(html)
@@ -819,10 +895,10 @@ class ElternPortalAPI:
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         tag = soup.select_one("#asam_content div.row:nth-child(2) div:nth-child(2)")
-        subject = tag.get_text() if tag else None
+        subject = tag.get_text().strip() if tag else None
 
         tag = soup.select_one("#asam_content div.row label span")
-        sender = tag.get_text() if tag else None
+        sender = tag.get_text().strip() if tag else None
 
         tag = soup.select_one("#asam_content div.row div.form-control.arch_kom")
         body = tag.get_text() if tag else None
@@ -836,11 +912,11 @@ class ElternPortalAPI:
         """Elternportal poll (online)."""
 
         url_path = "/aktuelles/umfragen"
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("poll.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("poll.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
-                _LOGGER.debug("poll.status=%s", response.status)
+                LOGGER.debug("poll.status=%s", response.status)
             html = await response.text()
             await self.async_poll_parse(html)
 
@@ -848,6 +924,7 @@ class ElternPortalAPI:
         """Elternportal poll (parse)."""
 
         self._student.polls = []
+        treshold = date.today() + timedelta(days=self.poll_treshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         rows = soup.select("#asam_content div.row.m_bot")
@@ -858,7 +935,7 @@ class ElternPortalAPI:
                 href = None
             else:
                 title = tag.get_text()
-                href = urllib.parse.urljoin("/", tag["href"])
+                href = parse.urljoin("/", tag["href"])
 
             tag = row.select_one("div div:nth-child(1) a[title='Anhang']")
             attachment = tag2attachment(tag) if tag else None
@@ -868,22 +945,14 @@ class ElternPortalAPI:
                 end = None
             else:
                 match = re.search(r"\d{2}\.\d{2}\.\d{4}", tag.get_text())
-                end = (
-                    datetime.datetime.strptime(match[0], "%d.%m.%Y").date()
-                    if match
-                    else None
-                )
+                end = datetime.strptime(match[0], "%d.%m.%Y").date() if match else None
 
             tag = row.select_one("div div:nth-child(3)")
             if tag is None:
                 vote = None
             else:
                 match = re.search(r"\d{2}\.\d{2}\.\d{4}", tag.get_text())
-                vote = (
-                    datetime.datetime.strptime(match[0], "%d.%m.%Y").date()
-                    if match
-                    else None
-                )
+                vote = datetime.strptime(match[0], "%d.%m.%Y").date() if match else None
 
             if href is None:
                 detail = None
@@ -893,15 +962,18 @@ class ElternPortalAPI:
                 else:
                     detail = await self.async_poll_detail_online(href)
 
-            poll = Poll(
-                title=title,
-                href=href,
-                attachment=attachment,
-                vote=vote,
-                end=end,
-                detail=detail,
-            )
-            self._student.polls.append(poll)
+            if end >= treshold:
+                poll = Poll(
+                    title=title,
+                    href=href,
+                    attachment=attachment,
+                    vote=vote,
+                    end=end,
+                    detail=detail,
+                )
+                self._student.polls.append(poll)
+
+        self._student.polls.sort(key=lambda poll: poll.end)
 
     async def async_poll_detail_demo(self) -> str:
         """Elternportal poll detail (demo)."""
@@ -911,11 +983,11 @@ class ElternPortalAPI:
     async def async_poll_detail_online(self, url_path: str) -> str:
         """Elternportal poll detail (online)."""
 
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("poll.detail.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("poll.detail.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
-                _LOGGER.debug("poll.detail.status=%s", response.status)
+                LOGGER.debug("poll.detail.status=%s", response.status)
             html = await response.text()
             detail = await self.async_poll_detail_parse(html)
             return detail
@@ -935,39 +1007,35 @@ class ElternPortalAPI:
         """Elternportal register (demo)."""
 
         self._student.registers = []
-        date_current = datetime.date.today()
+        date_current = date.today()
         await self.async_register_parse(DEMO_HTML_REGISTER, date_current)
 
     async def async_register_online(self) -> None:
         """Elternportal register (online)."""
 
         self._student.registers = []
-        date_current = datetime.date.today() + datetime.timedelta(
-            days=self.register_start_min
-        )
-        date_until = datetime.date.today() + datetime.timedelta(
-            days=self.register_start_max
-        )
+        date_current = date.today() + timedelta(days=self.register_start_min)
+        date_until = date.today() + timedelta(days=self.register_start_max)
         while date_current <= date_until:
 
-            url_path = "/service/klassenbuch?cur_date=" + date_current.strftime(
-                "%d.%m.%Y"
-            )
-            url = urllib.parse.urljoin(self.base_url, url_path)
-            _LOGGER.debug("register.url=%s", url)
+            url_path = "/service/klassenbuch?cur_date="
+            url_path += date_current.strftime("%d.%m.%Y")
+            url = parse.urljoin(self.base_url, url_path)
+            LOGGER.debug("register.url=%s", url)
             async with self._session.get(url) as response:
                 if response.status != 200:
-                    _LOGGER.debug("register.status=%s", response.status)
+                    LOGGER.debug("register.status=%s", response.status)
                 html = await response.text()
                 await self.async_register_parse(html, date_current)
 
-            date_current += datetime.timedelta(days=1)
+            date_current += timedelta(days=1)
 
     async def async_register_parse(
         self, html: str, date_current: datetime.date
     ) -> None:
         """Elternportal register (parse)."""
 
+        treshold = date.today() + timedelta(days=self.register_treshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         tables = soup.select("#asam_content table.table.table-bordered")
@@ -1020,11 +1088,10 @@ class ElternPortalAPI:
                                 r"^Zu Erledigen bis: (\d{2}\.\d{2}\.\d{4})$",
                                 content,
                             )
-                            date_completion = (
-                                datetime.datetime.strptime(match[1], "%d.%m.%Y").date()
-                                if match
-                                else None
-                            )
+                            if match:
+                                date_completion = datetime.strptime(
+                                    match[1], "%d.%m.%Y"
+                                ).date()
 
                             if content == "Keine Hausaufgabe eingetragen.":
                                 empty = True
@@ -1038,34 +1105,45 @@ class ElternPortalAPI:
                         body = "\n".join(lines) if lines else None
 
                     case "Datei(e)n":
-                        tag = row.select_one("td:nth-child(2)")
-                        content = tag.get_text() if tag else ""
-                        lines = tag.find_all(string=True)
-
                         # attachment
-                        a = tag.find("a")
-                        if a:
-                            attachment = tag2attachment(a)
-
-                            match = re.search(r"\((\d+\.\d+) KB\)", lines[2])
-                            attachment.size = float(match[1]) if match else None
+                        links = row.select("td:nth-child(2) a")
+                        for link in links:
+                            attachment = tag2attachment(link)
+                            size_text = link.nextSibling
+                            match = re.search(
+                                r"\((\d+\.\d+) (B|Byte|KB|MB)\)", size_text
+                            )
+                            if match:
+                                if match[2] == "B" or match[2] == "Byte":
+                                    attachment.size = int(float(match[1]))
+                                if match[2] == "KB":
+                                    attachment.size = int(1024.0 * float(match[1]))
+                                if match[2] == "MB":
+                                    attachment.size = int(
+                                        1024.0 * 1024.0 * float(match[1])
+                                    )
 
                             attachments.append(attachment)
 
-            if self.register_show_empty or not empty or attachments:
-                register = Register(
-                    subject=subject,
-                    short=short,
-                    teacher=teacher,
-                    lesson=lesson,
-                    substitution=substitution,
-                    empty=empty,
-                    rtype=rtype,
-                    start=date_current,
-                    completion=date_completion,
-                    body=body,
-                )
-                self._student.registers.append(register)
+            if date_completion >= treshold:
+                if self.register_show_empty or not empty or attachments:
+                    register = Register(
+                        subject=subject,
+                        short=short,
+                        teacher=teacher,
+                        lesson=lesson,
+                        substitution=substitution,
+                        empty=empty,
+                        rtype=rtype,
+                        start=date_current,
+                        completion=date_completion,
+                        body=body,
+                    )
+                    self._student.registers.append(register)
+
+        self._student.registers.sort(
+            key=lambda register: (register.start, register.completion)
+        )
 
     async def async_sicknote_demo(self) -> None:
         """Elternportal sick note (demo)."""
@@ -1075,11 +1153,11 @@ class ElternPortalAPI:
         """Elternportal sick note (online)."""
 
         url_path = "/meldungen/krankmeldung"
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("sicknote.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("sicknote.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
-                _LOGGER.debug("sicknote.status=%s", response.status)
+                LOGGER.debug("sicknote.status=%s", response.status)
             html = await response.text()
             await self.async_sicknote_parse(html)
 
@@ -1088,6 +1166,7 @@ class ElternPortalAPI:
 
         self._student.sicknotes = []
         timezone = await aiozoneinfo.async_get_time_zone(self._timezone_str)
+        treshold = date.today() + timedelta(days=self.sicknote_treshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         rows = soup.select("#asam_content table.ui.table tr")
@@ -1102,21 +1181,21 @@ class ElternPortalAPI:
                 link = None
 
             # query
-            result = urllib.parse.urlparse(link)
-            query = urllib.parse.parse_qs(result.query)
+            result = parse.urlparse(link)
+            query = parse.parse_qs(result.query)
 
             # df -> start
             start = None
             if "df" in query:
                 df = int(query["df"][0])
-                start = datetime.datetime.fromtimestamp(df, timezone).date()
+                start = datetime.fromtimestamp(df, timezone).date()
             else:
                 if len(cells) > 1:
                     lines = cells[1].find_all(string=True)
                     if lines:
                         match = re.search(r"\d{2}\.\d{2}\.\d{4}", lines[0])
                         start = (
-                            datetime.datetime.strptime(match[0], "%d.%m.%Y").date()
+                            datetime.strptime(match[0], "%d.%m.%Y").date()
                             if match
                             else None
                         )
@@ -1125,14 +1204,14 @@ class ElternPortalAPI:
             end = start
             if "dt" in query:
                 dt = int(query["dt"][0])
-                end = datetime.datetime.fromtimestamp(dt, timezone).date()
+                end = datetime.fromtimestamp(dt, timezone).date()
             else:
                 if len(cells) > 1:
                     lines = cells[1].find_all(string=True)
                     if lines:
                         match = re.search(r"\d{2}\.\d{2}\.\d{4}", lines[1])
                         end = (
-                            datetime.datetime.strptime(match[0], "%d.%m.%Y").date()
+                            datetime.strptime(match[0], "%d.%m.%Y").date()
                             if match
                             else None
                         )
@@ -1147,8 +1226,11 @@ class ElternPortalAPI:
 
             if comment == "":
                 comment = None
-            sicknote = SickNote(start, end, comment)
-            self._student.sicknotes.append(sicknote)
+            if end >= treshold:
+                sicknote = SickNote(start, end, comment)
+                self._student.sicknotes.append(sicknote)
+
+        self._student.sicknotes.sort(key=lambda sicknote: sicknote.start)
 
     async def async_logout_demo(self) -> None:
         """Elternportal logout (demo)."""
@@ -1159,12 +1241,12 @@ class ElternPortalAPI:
         """Elternportal logout (online)."""
 
         url_path = "/logout"
-        url = urllib.parse.urljoin(self.base_url, url_path)
-        _LOGGER.debug("logout.url=%s", url)
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("logout.url=%s", url)
         async with self._session.get(url) as response:
             if response.status != 200:
                 message = f"logout.status={response.status}"
-                _LOGGER.exception(message)
+                LOGGER.exception(message)
                 raise CannotConnectException(message)
 
             html = await response.text()
@@ -1172,8 +1254,7 @@ class ElternPortalAPI:
 
     async def async_logout_parse(self, html: str) -> None:
         """Elternportal logout (online)."""
-
-        # nothing to do
+        pass
 
     def get_schools(self) -> list[School]:
         """Elternportal get list of schools."""

@@ -1,13 +1,13 @@
 """Message module"""
 
-import dataclasses
-import datetime
+from dataclasses import dataclass
+from datetime import datetime
 
-@dataclasses.dataclass
+@dataclass
 class Message:
     """Class representing a message"""
     sender: str
-    sent: datetime.datetime
+    sent: datetime
     new: bool
     subject: str
     body: str

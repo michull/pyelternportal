@@ -1,8 +1,8 @@
 """ Lesson module """
 
-import dataclasses
+from dataclasses import dataclass
 
-@dataclasses.dataclass
+@dataclass
 class Lesson():
     """Class representing a lesson"""
     weekday: int

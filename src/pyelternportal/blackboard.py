@@ -1,15 +1,14 @@
 """ Black board module """
 
-import dataclasses
-import datetime
+from dataclasses import dataclass
+from datetime import date
 
 from pyelternportal.attachment import Attachment
 
-@dataclasses.dataclass
+@dataclass
 class BlackBoard():
     """Class representing a black board"""
-    sent: datetime.date
-    new: bool
+    sent: date
     subject: str
     body: str
     attachment: Attachment

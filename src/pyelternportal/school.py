@@ -1,8 +1,8 @@
 """School module"""
 
-import dataclasses
+from dataclasses import dataclass
 
-@dataclasses.dataclass
+@dataclass
 class School():
     """Dataclass representing a school"""
     school: str = None

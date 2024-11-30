@@ -2,10 +2,10 @@
 
 # pylint: disable=too-many-instance-attributes
 
-import dataclasses
-import datetime
+from dataclasses import dataclass
+from datetime import date
 
-@dataclasses.dataclass
+@dataclass
 class Register():
     """Class representing a register"""
     subject: str
@@ -15,6 +15,6 @@ class Register():
     substitution: bool
     empty: bool
     rtype: str
-    start: datetime.date
-    completion: datetime.date
+    start: date
+    completion: date
     body: str

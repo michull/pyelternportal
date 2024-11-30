@@ -1,7 +1,7 @@
 """ Attachment module """
 
-import dataclasses
-import urllib.parse
+from dataclasses import dataclass
+from urllib import parse
 
 from bs4 import Tag
 
@@ -9,10 +9,9 @@ ATYPE_DEFAULT = "default"
 ATYPE_REGISTER = "lesson"
 
 
-@dataclasses.dataclass
+@dataclass
 class Attachment:
     """Class representing an attachment"""
-
     atype: str
     aid: int
     name: str
@@ -23,9 +22,9 @@ class Attachment:
 def tag2attachment(atag: Tag) -> Attachment:
     """Convert html tag into class attachment"""
     href = atag["href"] if atag.has_attr("href") else None
-    url = urllib.parse.urljoin("/", href)
-    parseresult = urllib.parse.urlparse(url)
-    query = urllib.parse.parse_qs(parseresult.query)
+    url = parse.urljoin("/", href)
+    parseresult = parse.urlparse(url)
+    query = parse.parse_qs(parseresult.query)
 
     match parseresult.path:
 

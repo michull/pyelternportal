@@ -49,12 +49,12 @@ for student in api.students:
 
 ### Methods
 
-| Method                                                 | Description
-| :----------------------------------------------------- | :----------
-| `set_config`, `set_config_data`                        | Set the base configuration
-| `set_option`, `set_option_register`, `set_option_data` | Set the optional configuration
-| `async_validate_config`                                | Validate base config, set property `school_name`
-| `async_update`                                         | Update data, set properties `students` and `last_update`
+| Method                                                                        | Description
+| :---------------------------------------------------------------------------- | :----------
+| `set_config`, `set_config_data`                                               | Set the base configuration
+| `set_option`, `set_option_treshold`, `set_option_register`, `set_option_data` | Set the optional configuration
+| `async_validate_config`                                                       | Validate base config, set property `school_name`
+| `async_update`                                                                | Update data, set properties `students` and `last_update`
 
 
 #### `set_config`
@@ -91,6 +91,19 @@ Set the optional configuration.
 | `poll`        | `bool` | `False` | Get data of page "aktuelles/umfragen"?
 | `register`    | `bool` | `False` | Get data of page "service/klassenbuch"?
 | `sicknote`    | `bool` | `False` | Get data of page "meldungen/krankmeldung"?
+
+
+#### `set_option_treshold`
+
+Set the optional treshold values.
+
+| Parameter              | Type   | Default | Description
+| :--------------------- | :----- | :-----: | :----------
+| `blackboard_treshold`  | `int`  |   -7    | Treshold value (relative to today) for black board sent
+| `letter_treshold`      | `int`  |   -7    | Treshold value (relative to today) for letter sent
+| `message_treshold`     | `int`  |   -7    | Treshold value (relative to today) for message sent
+| `register_treshold`    | `int`  |   +0    | Treshold value (relative to today) for register completion
+| `sicknote_treshold`    | `int`  |   -7    | Treshold value (relative to today) for sick note end
 
 
 #### `set_option_register`

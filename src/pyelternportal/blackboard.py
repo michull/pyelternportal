@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from datetime import date
 
-from pyelternportal.attachment import Attachment
+from .attachment import Attachment
 
 @dataclass
 class BlackBoard():

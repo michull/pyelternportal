@@ -5,29 +5,34 @@ from typing import Dict
 
 LOGGER = logging.getLogger(__name__)
 
+CONF_APPOINTMENT_CALENDAR: str = "appointment_calendar"
 CONF_APPOINTMENT_TRESHOLD_START: str = "appointment_treshold_start"
 CONF_APPOINTMENT_TRESHOLD_END: str = "appointment_treshold_end"
 CONF_BLACKBOARD_TRESHOLD: str = "blackboard_treshold"
 CONF_LETTER_TRESHOLD: str = "letter_treshold"
 CONF_MESSAGE_TRESHOLD: str = "message_treshold"
 CONF_POLL_TRESHOLD: str = "poll_treshold"
-CONF_REGISTER_CAL: str = "register_calendar"
+CONF_REGISTER_CALENDAR: str = "register_calendar"
 CONF_REGISTER_START_MIN: str = "register_start_min"
 CONF_REGISTER_START_MAX: str = "register_start_max"
 CONF_REGISTER_SHOW_EMPTY: str = "register_show_empty"
 CONF_REGISTER_TRESHOLD: str = "register_treshold"
+CONF_SICKNOTE_CALENDAR: str = "sicknote_calendar"
 CONF_SICKNOTE_TRESHOLD: str = "sicknote_treshold"
 
+DEFAULT_APPOINTMENT_CALENDAR: bool = False
 DEFAULT_APPOINTMENT_TRESHOLD_END: int = +0
 DEFAULT_APPOINTMENT_TRESHOLD_START: int = +14
 DEFAULT_BLACKBOARD_TRESHOLD: int = -7
 DEFAULT_LETTER_TRESHOLD: int = -7
 DEFAULT_MESSAGE_TRESHOLD: int = -7
 DEFAULT_POLL_TRESHOLD: int = 0
+DEFAULT_REGISTER_CALENDAR: bool = False
 DEFAULT_REGISTER_SHOW_EMPTY: bool = False
 DEFAULT_REGISTER_START_MIN: int = -6
 DEFAULT_REGISTER_START_MAX: int = +5
 DEFAULT_REGISTER_TRESHOLD: int = +1
+DEFAULT_SICKNOTE_CALENDAR: bool = False
 DEFAULT_SICKNOTE_TRESHOLD: int = -7
 
 SCHOOL_SUBJECTS: list[Dict[str, str]] = [

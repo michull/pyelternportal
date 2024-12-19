@@ -23,27 +23,33 @@ import aiozoneinfo
 import bs4
 
 from .const import (
+    CONF_APPOINTMENT_CALENDAR,
     CONF_APPOINTMENT_TRESHOLD_END,
     CONF_APPOINTMENT_TRESHOLD_START,
     CONF_BLACKBOARD_TRESHOLD,
     CONF_LETTER_TRESHOLD,
     CONF_MESSAGE_TRESHOLD,
     CONF_POLL_TRESHOLD,
+    CONF_REGISTER_CALENDAR,
     CONF_REGISTER_SHOW_EMPTY,
     CONF_REGISTER_START_MAX,
     CONF_REGISTER_START_MIN,
     CONF_REGISTER_TRESHOLD,
+    CONF_SICKNOTE_CALENDAR,
     CONF_SICKNOTE_TRESHOLD,
+    DEFAULT_APPOINTMENT_CALENDAR,
     DEFAULT_APPOINTMENT_TRESHOLD_END,
     DEFAULT_APPOINTMENT_TRESHOLD_START,
     DEFAULT_BLACKBOARD_TRESHOLD,
     DEFAULT_LETTER_TRESHOLD,
     DEFAULT_MESSAGE_TRESHOLD,
     DEFAULT_POLL_TRESHOLD,
+    DEFAULT_REGISTER_CALENDAR,
     DEFAULT_REGISTER_TRESHOLD,
     DEFAULT_REGISTER_SHOW_EMPTY,
     DEFAULT_REGISTER_START_MAX,
     DEFAULT_REGISTER_START_MIN,
+    DEFAULT_SICKNOTE_CALENDAR,
     DEFAULT_SICKNOTE_TRESHOLD,
     LOGGER,
     SCHOOL_SUBJECTS,
@@ -87,8 +93,7 @@ from .demo import (
     DEMO_JSON_APPOINTMENT,
 )
 
-VERSION = "0.0.17"
-VERSION_INFO = (0, 0, 17)
+VERSION = "0.0.18"
 
 
 class ElternPortalAPI:
@@ -118,6 +123,11 @@ class ElternPortalAPI:
         self.register: bool = False
         self.sicknote: bool = False
 
+        # set_option_calendar
+        self.appointment_calendar: bool = DEFAULT_APPOINTMENT_CALENDAR
+        self.register_calendar: bool = DEFAULT_REGISTER_CALENDAR
+        self.sicknote_calendar: bool = DEFAULT_SICKNOTE_CALENDAR
+
         # set_option_treshold
         self.appointment_treshold_end: int = DEFAULT_APPOINTMENT_TRESHOLD_END
         self.appointment_treshold_start: int = DEFAULT_APPOINTMENT_TRESHOLD_START
@@ -142,7 +152,7 @@ class ElternPortalAPI:
         self._demo: bool = False
         self._student: Student = None
         self.students: list[Student] = []
-        self.last_update = None
+        self.last_update: datetime = None
 
     def set_config(self, school: str, username: str, password: str):
         """Initialize the config."""
@@ -212,6 +222,24 @@ class ElternPortalAPI:
         poll: bool = option.get("poll", False)
         register: bool = option.get("register", False)
         sicknote: bool = option.get("sicknote", False)
+        self.set_option(
+            appointment, blackboard, lesson, letter, message, poll, register, sicknote
+        )
+
+        appointment_calendar: bool = option.get(
+            CONF_APPOINTMENT_CALENDAR, DEFAULT_APPOINTMENT_CALENDAR
+        )
+        register_calendar: bool = option.get(
+            CONF_REGISTER_CALENDAR, DEFAULT_REGISTER_CALENDAR
+        )
+        sicknote_calendar: bool = option.get(
+            CONF_SICKNOTE_CALENDAR, DEFAULT_SICKNOTE_CALENDAR
+        )
+        self.set_option_calendar(
+            appointment_calendar,
+            register_calendar,
+            sicknote_calendar,
+        )
 
         appointment_treshold_end: int = option.get(
             CONF_APPOINTMENT_TRESHOLD_END, DEFAULT_APPOINTMENT_TRESHOLD_END
@@ -233,20 +261,6 @@ class ElternPortalAPI:
         sicknote_treshold: int = option.get(
             CONF_SICKNOTE_TRESHOLD, DEFAULT_SICKNOTE_TRESHOLD
         )
-
-        register_start_min: int = option.get(
-            CONF_REGISTER_START_MIN, DEFAULT_REGISTER_START_MIN
-        )
-        register_start_max: int = option.get(
-            CONF_REGISTER_START_MAX, DEFAULT_REGISTER_START_MAX
-        )
-        register_show_empty: int = option.get(
-            CONF_REGISTER_SHOW_EMPTY, DEFAULT_REGISTER_SHOW_EMPTY
-        )
-
-        self.set_option(
-            appointment, blackboard, lesson, letter, message, poll, register, sicknote
-        )
         self.set_option_treshold(
             appointment_treshold_end,
             appointment_treshold_start,
@@ -257,11 +271,33 @@ class ElternPortalAPI:
             register_treshold,
             sicknote_treshold,
         )
+
+        register_start_min: int = option.get(
+            CONF_REGISTER_START_MIN, DEFAULT_REGISTER_START_MIN
+        )
+        register_start_max: int = option.get(
+            CONF_REGISTER_START_MAX, DEFAULT_REGISTER_START_MAX
+        )
+        register_show_empty: int = option.get(
+            CONF_REGISTER_SHOW_EMPTY, DEFAULT_REGISTER_SHOW_EMPTY
+        )
         self.set_option_register(
             register_start_min,
             register_start_max,
             register_show_empty,
         )
+
+    def set_option_calendar(
+        self,
+        appointment_calendar: bool = DEFAULT_APPOINTMENT_CALENDAR,
+        register_calendar: bool = DEFAULT_REGISTER_CALENDAR,
+        sicknote_calendar: bool = DEFAULT_SICKNOTE_CALENDAR,
+    ) -> None:
+        """Initialize the option calendar."""
+
+        self.appointment_calendar = appointment_calendar
+        self.register_calendar = register_calendar
+        self.sicknote_calendar = sicknote_calendar
 
     def set_option_treshold(
         self,
@@ -297,8 +333,19 @@ class ElternPortalAPI:
         self.register_start_max = register_start_max
         self.register_show_empty = register_show_empty
 
-    def get_option(self, sensor_key: str) -> bool:
-        """Get option"""
+    def get_option_calendar(self, calendar_key: str) -> bool:
+        """Get option calendar"""
+        result: bool = False
+        if calendar_key == CONF_APPOINTMENT_CALENDAR:
+            result: bool = self.appointment_calendar
+        if calendar_key == CONF_REGISTER_CALENDAR:
+            result: bool = self.register_calendar
+        if calendar_key == CONF_SICKNOTE_CALENDAR:
+            result: bool = self.sicknote_calendar
+        return result
+
+    def get_option_sensor(self, sensor_key: str) -> bool:
+        """Get option sensor"""
         result: bool = False
         if sensor_key == "appointment":
             result: bool = self.appointment

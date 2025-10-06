@@ -13,7 +13,6 @@ amgydie    | https://amgydie.eltern-portal.org     | Ammersee-Gymnasium Dießen,
 amorgym    | https://amorgym.eltern-portal.org     | Karl-Ernst-Gymnasium Amorbach, 63916 Amorbach
 anfragym   | https://anfragym.eltern-portal.org    | Anne-Frank-Gymnasium Erding, 85435 Erding
 ansfobo    | https://ansfobo.eltern-portal.org     | Berufliche Oberschule Ansbach, 91522 Ansbach
-apgying    | https://apgying.eltern-portal.org     | Apian-Gymnasium Ingolstadt, 85051 Ingolstadt
 asamgymuc  | https://asamgymuc.eltern-portal.org   | Asam-Gymnasium München, 81541 München
 astipagym  | https://astipagym.eltern-portal.org   | Adalbert-Stifter-Gymnasium Passau, 94032 Passau
 aufreugy   | https://aufreugy.eltern-portal.org    | Auersperg-Gymnasium, 94034 Passau
@@ -66,7 +65,7 @@ fkgwue     | https://fkgwue.eltern-portal.org      | Friedrich-Koenig-Gymnasium,
 flgybam    | https://flgybam.eltern-portal.org     | Franz-Ludwig-Gymnasium Bamberg
 framagym   | https://framagym.eltern-portal.org    | Franz-Marc-Gymnasium, 85570 Markt Schwaben
 freicamgy  | https://freicamgy.eltern-portal.org   | Camerloher-Gymnasium Freising, 85354 Freising
-freigymuc  | https://freigymuc.eltern-portal.org   | Gymnasium Freiham, 81248 München
+freigymuc  | https://freigymuc.eltern-portal.org   | Gymnasium Freiham, 81249 München
 fridgyerl  | https://fridgyerl.eltern-portal.org   | Gymnasium Fridericianum, 19053 Schwerin
 friebos    | https://friebos.eltern-portal.org     | Berufliche Oberschule Friedberg, 86316 Friedberg
 friedgym   | https://friedgym.eltern-portal.org    | Gymnasium Friedberg, 86316 Friedberg
@@ -94,7 +93,7 @@ gymzwie    | https://gymzwie.eltern-portal.org     | Gymnasium Zwiesel, 94227 Zw
 gypenz     | https://gypenz.eltern-portal.org      | Gymnasium Penzberg, 82377 Penzberg
 halegyla   | https://halegyla.eltern-portal.org    | Hans-Leinberger-Gymnasium Landshut, 84034 Landshut
 hamfrogy   | https://hamfrogy.eltern-portal.org    | Frobenius-Gymnasium Hammelburg, 97762 Hammelburg
-hcgla      | https://hcgla.eltern-portal.org       | Hans-Carossa-Gymnasium, 14089 Berlin
+hcgla      | https://hcgla.eltern-portal.org       | Hans-Carossa-Gymnasium, 84028 Landshut
 hehegymuc  | https://hehegymuc.eltern-portal.org   | Städt. Heinrich-Heine-Gymnasium
 helagyfue  | https://helagyfue.eltern-portal.org   | Helene-Lange-Gymnasium Fürth, 90762 Fürth
 heraugy    | https://heraugy.eltern-portal.org     | Gymnasium Herzogenaurach, 91074 Herzogenaurach
@@ -110,9 +109,9 @@ hsgyhoe    | https://hsgyhoe.eltern-portal.org     | Hanns-Seidel-Gymnasium Hös
 hugyvat    | https://hugyvat.eltern-portal.org     | Humboldt-Gymnasium-Vaterstetten, 85598 Vaterstetten
 hvbrsau    | https://hvbrsau.eltern-portal.org     | Heinrich-von-Buz Realschule Augsburg, 86154 Augsburg
 ickigym    | https://ickigym.eltern-portal.org     | Rainer-Maria-Rilke-Gymnasium Icking, 82057
-igtadah    | https://igtadah.eltern-portal.org     | Ignaz-Taschner-Gymnasium, 85221 Dachau
+igtadah    | https://igtadah.eltern-portal.org     | Ignaz-Taschner-Gymnasium
 iguerogym  | https://iguerogym.eltern-portal.org   | Ignaz-Günther-Gymnasium Rosenheim, 83022 Rosenheim
-illvoegy   | https://illvoegy.eltern-portal.org    | Illertal-Gymnasium Vöhringen, 89269 Vöhringen
+illvoegy   | https://illvoegy.eltern-portal.org    | Illertal-Gymnasium Vöhringen
 indomagy   | https://indomagy.eltern-portal.org    | Gymnasium Markt Indersdorf, 85229 Markt Indersdorf
 irmrs      | https://irmrs.eltern-portal.org       | Erzbischöfliche St.-Irmengard-Realschule
 jafugyau   | https://jafugyau.eltern-portal.org    | Jakob-Fugger-Gymnasium Augsburg, 86152 Augsburg
@@ -152,13 +151,13 @@ lsising    | https://lsising.eltern-portal.org     | Landschulheim Schloss Ising
 lskempf    | https://lskempf.eltern-portal.org     | Landschulheim Kempfenhausen, 82335
 ltgyprie   | https://ltgyprie.eltern-portal.org    | Ludwig-Thoma-Gymnasium, 83209 Prien am Chiemsee
 ludgymuc   | https://ludgymuc.eltern-portal.org    | Ludwigsgymnasium München, 81377 München
-ludgystra  | https://ludgystra.eltern-portal.org   | Ludwigsgymnasium Straubing, 94315 Straubing
+ludgystra  | https://ludgystra.eltern-portal.org   | Ludwigsgymnasium Straubing
 luigywas   | https://luigywas.eltern-portal.org    | Luitpold-Gymnasium Wasserburg am Inn, 83512 Wasserburg am Inn
 luise      | https://luise.eltern-portal.org       | Städtisches Luisengymnasium, 80333 München
 lupomuc    | https://lupomuc.eltern-portal.org     | Luitpold-Gymnasium München, 80538 München
 lwgschwab  | https://lwgschwab.eltern-portal.org   | Leonhard-Wagner-Gymnasium Schwabmünchen
 mabogym    | https://mabogym.eltern-portal.org     | Max-Born-Gymnasium, 82110 Germering
-marbugym   | https://marbugym.eltern-portal.org    | Marianum Buxheim Gymnasium des Schulwerks der Diözese Augsburg, 87740 Buxheim
+marbugym   | https://marbugym.eltern-portal.org    | Marianum Buxheim Gymnasium des Schulwerks der Diözese Augsburg, 87740
 marktgym   | https://marktgym.eltern-portal.org    | Gymnasium Marktbreit, 97340 Marktbreit
 mathemuc   | https://mathemuc.eltern-portal.org    | Maria-Theresia-Gymnasium, 81541 München
 maxgymuc   | https://maxgymuc.eltern-portal.org    | Maximiliansgymnasium München, 80803 München
@@ -191,7 +190,6 @@ ohagym     | https://ohagym.eltern-portal.org      | Gymnasium Oberhaching, 8204
 ohgyerl    | https://ohgyerl.eltern-portal.org     | Ohm-Gymnasium Erlangen, 91052 Erlangen
 olchigym   | https://olchigym.eltern-portal.org    | Gymnasium Olching, 82140 Olching
 omgyneu    | https://omgyneu.eltern-portal.org     | Oskar-Maria-Graf-Gymnasium, 85375
-opgypul    | https://opgypul.eltern-portal.org     | Otfried-Preußler-Gymnasium Pullach, 82049
 ovmgymuc   | https://ovmgymuc.eltern-portal.org    | Oskar-von-Miller-Gymnasium München, 80803 München
 ovtgym     | https://ovtgym.eltern-portal.org      | Otto-von-Taube-Gymnasium Gauting, 82131 Gauting
 pafgym     | https://pafgym.eltern-portal.org      | Schyren-Gymnasium, 85276 Pfaffenhofen an der Ilm
@@ -200,14 +198,13 @@ pfgyher    | https://pfgyher.eltern-portal.org     | Paul-Pfinzing-Gymnasium, 91
 plagyans   | https://plagyans.eltern-portal.org    | Platen-Gymnasium Ansbach, 91522 Ansbach
 prmpul     | https://prmpul.eltern-portal.org      | Erzbischöfliches Pater-Rupert-Mayer-Gymnasium Pullach, 82049
 prmpulgs   | https://prmpulgs.eltern-portal.org    | Erzbischöfliche Pater-Rupert-Mayer-Grundschule Pullach, 82049
-psmsgraf   | https://psmsgraf.eltern-portal.org    | Propst-Seyberer-Mittelschule Grafenau
 puheigy    | https://puheigy.eltern-portal.org     | Gymnasium Puchheim, 82178 Puchheim
 riegywue   | https://riegywue.eltern-portal.org    | Riemenschneider-Gymnasium Würzburg, 97070 Würzburg
 riwagybay  | https://riwagybay.eltern-portal.org   | Richard-Wagner-Gymnasium Bayreuth, 95444 Bayreuth
 roewuegy   | https://roewuegy.eltern-portal.org    | Röntgen-Gymnasium Würzburg, 97070 Würzburg
 rottlaugy  | https://rottlaugy.eltern-portal.org   | Rottmayr-Gymnasium Laufen, 83410 Laufen
-rsache     | https://rsache.eltern-portal.org      | Achental-Realschule Marquartstein
-rsgcham    | https://rsgcham.eltern-portal.org     | Robert-Schuman-Gymnasium Cham
+rsache     | https://rsache.eltern-portal.org      | Achental-Realschule Marquartstein, 83250
+rsgcham    | https://rsgcham.eltern-portal.org     | Robert-Schuman-Gymnasium Cham, 93413 Cham
 rsvat      | https://rsvat.eltern-portal.org       | Staatliche Realschule Vaterstetten, 85598 Vaterstetten
 rudigyau   | https://rudigyau.eltern-portal.org    | Rudolf-Diesel-Gymnasium Augsburg, 86163 Augsburg
 rugymue    | https://rugymue.eltern-portal.org     | Ruperti-Gymnasium, 84453 Mühldorf a. Inn
@@ -218,10 +215,11 @@ shr        | https://shr.eltern-portal.org         | Samuel-Heinicke-Realschule,
 siewuegym  | https://siewuegym.eltern-portal.org   | Siebold-Gymnasium Würzburg, 97070 Würzburg
 simagygu   | https://simagygu.eltern-portal.org    | Simon-Marius-Gymnasium, 91710 Gunzenhausen
 sontgym    | https://sontgym.eltern-portal.org     | Gymnasium Sonthofen, 87527 Sonthofen
-sosgymuc   | https://sosgymuc.eltern-portal.org    | Städtisches Sophie-Scholl-Gymnasium München, 80804 München
+sosgymuc   | https://sosgymuc.eltern-portal.org    | Städtisches Sophie-Scholl-Gymnasium München, 80796 München
 spmshau    | https://spmshau.eltern-portal.org     | Sport-Mittelschule Hauzenberg
 stagymu    | https://stagymu.eltern-portal.org     | Staffelsee-Gymnasium Murnau, 82418 Murnau am Staffelsee
 stbgym     | https://stbgym.eltern-portal.org      | Gymnasium Starnberg, 82319 Starnberg
+stettgyrsau | https://stettgyrsau.eltern-portal.org | A.B. v. Stettensches Institut Gymnasium und Realschule
 stgogyna   | https://stgogyna.eltern-portal.org    | St.-Gotthard-Gymnasium, 94557
 stugylen   | https://stugylen.eltern-portal.org    | Erzbischöfliches St.-Ursula-Gymnasium, 50321 Brühl
 tassimgy   | https://tassimgy.eltern-portal.org    | Tassilo-Gymnasium Simbach am Inn, 84359 Simbach
@@ -245,7 +243,7 @@ welfen     | https://welfen.eltern-portal.org      | Welfen-Gymnasium Schongau, 
 wggselb    | https://wggselb.eltern-portal.org     | Walter-Gropius-Gymnasium Selb, 95100 Selb
 wggymuc    | https://wggymuc.eltern-portal.org     | Städtisches Willi-Graf-Gymnasium München, 80804 München
 whgga      | https://whgga.eltern-portal.org       | Werner-Heisenberg-Gymnasium Garching, 85748 Garching bei München
-whgmuc     | https://whgmuc.eltern-portal.org      | Wilhelm-Hausenstein-Gymnasium München, 81925 München
+whgmuc     | https://whgmuc.eltern-portal.org      | Wilhelm-Hausenstein-Gymnasium München, 81927 München
 widipogy   | https://widipogy.eltern-portal.org    | Wilhelm-Diess-Gymnasium Pocking, 94060 Pocking
 wigywue    | https://wigywue.eltern-portal.org     | Wirsberg-Gymnasium Würzburg, 97070 Würzburg
 willigym   | https://willigym.eltern-portal.org    | Willibald-Gluck-Gymnasium, 92318 Neumarkt in der Oberpfalz

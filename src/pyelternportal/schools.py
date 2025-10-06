@@ -2,8 +2,8 @@
 
 # Generated automatically by /schools/schools.py (do not edit)
 
-# pylint: disable=too-many-lines
 # pylint: disable=line-too-long
+# pylint: disable=too-many-lines
 
 from .school import School
 
@@ -73,12 +73,6 @@ SCHOOLS = [
         name="Berufliche Oberschule Ansbach",
         postcode="91522",
         city="Ansbach",
-    ),
-    School(
-        school="apgying",
-        name="Apian-Gymnasium Ingolstadt",
-        postcode="85051",
-        city="Ingolstadt",
     ),
     School(
         school="asamgymuc",
@@ -387,7 +381,7 @@ SCHOOLS = [
     School(
         school="freigymuc",
         name="Gymnasium Freiham",
-        postcode="81248",
+        postcode="81249",
         city="München",
     ),
     School(
@@ -546,8 +540,8 @@ SCHOOLS = [
     School(
         school="hcgla",
         name="Hans-Carossa-Gymnasium",
-        postcode="14089",
-        city="Berlin",
+        postcode="84028",
+        city="Landshut",
     ),
     School(
         school="hehegymuc",
@@ -638,8 +632,6 @@ SCHOOLS = [
     School(
         school="igtadah",
         name="Ignaz-Taschner-Gymnasium",
-        postcode="85221",
-        city="Dachau",
     ),
     School(
         school="iguerogym",
@@ -650,8 +642,6 @@ SCHOOLS = [
     School(
         school="illvoegy",
         name="Illertal-Gymnasium Vöhringen",
-        postcode="89269",
-        city="Vöhringen",
     ),
     School(
         school="indomagy",
@@ -882,8 +872,6 @@ SCHOOLS = [
     School(
         school="ludgystra",
         name="Ludwigsgymnasium Straubing",
-        postcode="94315",
-        city="Straubing",
     ),
     School(
         school="luigywas",
@@ -917,7 +905,6 @@ SCHOOLS = [
         school="marbugym",
         name="Marianum Buxheim Gymnasium des Schulwerks der Diözese Augsburg",
         postcode="87740",
-        city="Buxheim",
     ),
     School(
         school="marktgym",
@@ -1109,11 +1096,6 @@ SCHOOLS = [
         postcode="85375",
     ),
     School(
-        school="opgypul",
-        name="Otfried-Preußler-Gymnasium Pullach",
-        postcode="82049",
-    ),
-    School(
         school="ovmgymuc",
         name="Oskar-von-Miller-Gymnasium München",
         postcode="80803",
@@ -1160,10 +1142,6 @@ SCHOOLS = [
         postcode="82049",
     ),
     School(
-        school="psmsgraf",
-        name="Propst-Seyberer-Mittelschule Grafenau",
-    ),
-    School(
         school="puheigy",
         name="Gymnasium Puchheim",
         postcode="82178",
@@ -1196,10 +1174,13 @@ SCHOOLS = [
     School(
         school="rsache",
         name="Achental-Realschule Marquartstein",
+        postcode="83250",
     ),
     School(
         school="rsgcham",
         name="Robert-Schuman-Gymnasium Cham",
+        postcode="93413",
+        city="Cham",
     ),
     School(
         school="rsvat",
@@ -1264,7 +1245,7 @@ SCHOOLS = [
     School(
         school="sosgymuc",
         name="Städtisches Sophie-Scholl-Gymnasium München",
-        postcode="80804",
+        postcode="80796",
         city="München",
     ),
     School(
@@ -1282,6 +1263,10 @@ SCHOOLS = [
         name="Gymnasium Starnberg",
         postcode="82319",
         city="Starnberg",
+    ),
+    School(
+        school="stettgyrsau",
+        name="A.B. v. Stettensches Institut Gymnasium und Realschule",
     ),
     School(
         school="stgogyna",
@@ -1421,7 +1406,7 @@ SCHOOLS = [
     School(
         school="whgmuc",
         name="Wilhelm-Hausenstein-Gymnasium München",
-        postcode="81925",
+        postcode="81927",
         city="München",
     ),
     School(

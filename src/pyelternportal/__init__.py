@@ -165,7 +165,7 @@ class ElternPortalAPI:
             .removesuffix(".eltern-portal.org")
         )
 
-        if not re.match(r"^[A-Za-z0-9]{1,10}$", school):
+        if not re.match(r"^[A-Za-z0-9]{1,11}$", school):
             message = '"school" is wrong: one to ten alpha-numeric characters'
             raise BadCredentialsException(message)
 

@@ -5,6 +5,8 @@
 from dataclasses import dataclass
 from datetime import date
 
+from .attachment import Attachment
+
 @dataclass
 class Register():
     """Class representing a register"""
@@ -18,3 +20,4 @@ class Register():
     start: date
     completion: date
     body: str
+    attachments: list[Attachment]

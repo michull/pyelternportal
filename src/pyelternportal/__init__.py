@@ -1195,9 +1195,7 @@ class ElternPortalAPI:
                                 if match[2] == "KB":
                                     attachment.size = int(1024.0 * float(match[1]))
                                 if match[2] == "MB":
-                                    attachment.size = int(
-                                        1024.0 * 1024.0 * float(match[1])
-                                    )
+                                    attachment.size = int(1048576.0 * float(match[1]))
 
                             attachments.append(attachment)
 
@@ -1214,6 +1212,7 @@ class ElternPortalAPI:
                         start=date_current,
                         completion=date_completion,
                         body=body,
+                        attachments=attachments,
                     )
                     self._student.registers.append(register)
 
@@ -1244,7 +1243,8 @@ class ElternPortalAPI:
         timezone = await aiozoneinfo.async_get_time_zone(self._timezone_str)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
-        rows = soup.select("#asam_content table.ui.table tr")
+        # rows = soup.select("#asam_content table.ui.table tr")
+        rows = soup.select("div.content table.ui.table tr")
         for row in rows:
             cells = row.select("td")
 

@@ -300,3 +300,33 @@ Liebe Grüße<br />
 ).replace(
     "#TODAY#", DEMO_TODAY
 )
+
+DEMO_HTML_SUBSTITUTION = """
+<!DOCTYPE html>
+<html>
+<body>
+<div class="" id="asam_content">
+<h2><img src="/includes/project/images/service_blau_20h.png" style="margin-right:10px;margin-bottom:10px;"> Vertretungsplan der Klasse 5a</h2><div class="main_center"><div class="list bold full_width text_center">Mo., 06.10.2025 - KW 41</div><table class="table" style="min-width: 75%;"><tbody><tr class="vp_plan_head"><td width="10%" align="left" class="table_header text-center">Std.</td>
+<td width="15%" align="left" class="table_header text-center">Betrifft.</td><td width="15%" align="left" class="table_header text-center">Vertretung</td><td width="15%" align="left" class="table_header text-center">Fach</td><td width="15%" align="left" class="table_header text-center">Raum</td><td width="30%" align="left" class="table_header text-center">Info</td></tr><tr class="">
+<td width="100%" colspan="6" align="center" valign="top">Keine Vertretungen für die 5a</td></tr></tbody></table><div class="list bold full_width text_center">Di., 07.10.2025 - KW 41</div><table class="table" style="min-width: 75%;"><tbody><tr class="vp_plan_head"><td width="10%" align="left" class="table_header text-center">Std.</td><td width="15%" align="left" class="table_header text-center">Betrifft.</td>
+<td width="15%" align="left" class="table_header text-center">Vertretung</td><td width="15%" align="left" class="table_header text-center">Fach</td><td width="15%" align="left" class="table_header text-center">Raum</td><td width="30%" align="left" class="table_header text-center">Info</td></tr><tr class="liste_grau"><td width="10%" align="left" class="text_center">1.</td>
+<td width="15%" align="left" class="text_center">#NAME_D#</td><td width="15%" align="left" class="text_center">#NAME_D#</td><td width="15%" align="left" class="text_center">NuT</td><td width="15%" align="left" class="text_center">N106</td><td width="30%" align="left" class="text-center">Raumänderung</td></tr><tr class="liste_weiss"><td width="10%" align="left" class="text_center">3.</td>
+<td width="15%" align="left" class="text_center">#NAME_E#</td><td width="15%" align="left" class="text_center">#NAME_E#</td><td width="15%" align="left" class="text_center"><span style="text-decoration: line-through;">&nbsp;D&nbsp;</span> D</td><td width="15%" align="left" class="text_center">Bib</td><td width="30%" align="left" class="text-center">RaumänderungBibliotheksführung</td></tr><tr class="liste_grau">
+<td width="10%" align="left" class="text_center">4.</td><td width="15%" align="left" class="text_center">#NAME_E#</td><td width="15%" align="left" class="text_center">#NAME_E#</td><td width="15%" align="left" class="text_center"><span style="text-decoration: line-through;">&nbsp;D&nbsp;</span> D</td><td width="15%" align="left" class="text_center">Bib</td>
+<td width="30%" align="left" class="text-center">RaumänderungBibliotheksführung</td></tr></tbody></table><div class="list bold full_width text_center">Mi., 08.10.2025 - KW 41</div><table class="table" style="min-width: 75%;"><tbody><tr class="vp_plan_head"><td width="10%" align="left" class="table_header text-center">Std.</td><td width="15%" align="left" class="table_header text-center">Betrifft.</td>
+<td width="15%" align="left" class="table_header text-center">Vertretung</td><td width="15%" align="left" class="table_header text-center">Fach</td><td width="15%" align="left" class="table_header text-center">Raum</td><td width="30%" align="left" class="table_header text-center">Info</td></tr><tr class="liste_grau"><td width="10%" align="left" class="text_center">2.</td>
+<td width="15%" align="left" class="text_center">#NAME_KU#</td><td width="15%" align="left" class="text_center">#NAME_KU#</td><td width="15%" align="left" class="text_center"><span style="text-decoration: line-through;">&nbsp;M&nbsp;</span> M</td><td width="15%" align="left" class="text_center">N101</td>
+<td width="30%" align="left" class="text-center">SondereinsatzSchulwegtraining, Treffpunkt Klassenzimmer</td></tr></tbody></table><div class="list bold full_width text_center">Do., 09.10.2025 - KW 41</div><table class="table" style="min-width: 75%;"><tbody><tr class="vp_plan_head"><td width="10%" align="left" class="table_header text-center">Std.</td>
+<td width="15%" align="left" class="table_header text-center">Betrifft.</td><td width="15%" align="left" class="table_header text-center">Vertretung</td><td width="15%" align="left" class="table_header text-center">Fach</td><td width="15%" align="left" class="table_header text-center">Raum</td>
+<td width="30%" align="left" class="table_header text-center">Info</td></tr><tr class=""><td width="100%" colspan="6" align="center" valign="top">Keine Vertretungen für die 5a</td></tr></tbody></table><div class="list bold full_width text_center">Fr., 10.10.2025 - KW 41</div><table class="table" style="min-width: 75%;"><tbody><tr class="vp_plan_head"><td width="10%" align="left" class="table_header text-center">Std.</td><td width="15%" align="left" class="table_header text-center">Betrifft.</td><td width="15%" align="left" class="table_header text-center">Vertretung</td><td width="15%" align="left" class="table_header text-center">Fach</td><td width="15%" align="left" class="table_header text-center">Raum</td><td width="30%" align="left" class="table_header text-center">Info</td></tr><tr class="liste_grau"><td width="10%" align="left" class="text_center">6.</td><td width="15%" align="left" class="text_center">#NAME_M#</td><td width="15%" align="left" class="text_center">&nbsp;</td><td width="15%" align="left" class="text_center">E</td><td width="15%" align="left" class="text_center">N101</td><td width="30%" align="left" class="text-center">entfällt</td></tr></tbody></table><div class="list full_width">Stand:&nbsp;06.10.2025&nbsp;19:01:30</div><p class="pull-left" style="width: 100%;">Der hier dargestellte Vertretungsplan ist unverbindlich. Kurzfristige Änderungen sind jederzeit möglich.</p></div><hr><table class="" width="100%" border="0"><tbody><tr><td><b>Mitglied in Klassenteilungen</b></td><td><b>Mitglied in Schülergruppe/n</b></td></tr><tr><td valign="top">5_Mu_5a_Geer, Musik<br>5_Ev_5ad_Nico, Evang. Religionslehre<br></td><td valign="top">OGTS<br></td></tr></tbody></table>
+</div>
+</body></html>
+""".replace(
+    "#NAME_D#", DEMO_NAME_D
+).replace(
+    "#NAME_E#", DEMO_NAME_E
+).replace(
+    "#NAME_KU#", DEMO_NAME_KU
+).replace(
+    "#NAME_M#", DEMO_NAME_M
+)

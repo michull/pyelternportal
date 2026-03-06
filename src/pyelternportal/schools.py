@@ -77,7 +77,7 @@ SCHOOLS = [
     School(
         school="asamgymuc",
         name="Asam-Gymnasium München",
-        postcode="81541",
+        postcode="81539",
         city="München",
     ),
     School(
@@ -337,6 +337,7 @@ SCHOOLS = [
     School(
         school="evbspar",
         name="Emil-von-Behring-Gymnasium Spardorf",
+        postcode="91080",
     ),
     School(
         school="fagyneu",
@@ -603,8 +604,8 @@ SCHOOLS = [
     School(
         school="hsgyfue",
         name="Heinrich-Schliemann-Gymnasium",
-        postcode="90762",
-        city="Fürth",
+        postcode="10439",
+        city="Berlin",
     ),
     School(
         school="hsgyhoe",
@@ -632,6 +633,8 @@ SCHOOLS = [
     School(
         school="igtadah",
         name="Ignaz-Taschner-Gymnasium",
+        postcode="85221",
+        city="Dachau",
     ),
     School(
         school="iguerogym",
@@ -888,7 +891,7 @@ SCHOOLS = [
     School(
         school="lupomuc",
         name="Luitpold-Gymnasium München",
-        postcode="80538",
+        postcode="81925",
         city="München",
     ),
     School(
@@ -944,7 +947,7 @@ SCHOOLS = [
     School(
         school="mjsmuc",
         name="Staatliches Gymnasium Max-Josef-Stift München",
-        postcode="81677",
+        postcode="81679",
         city="München",
     ),
     School(
@@ -1057,8 +1060,6 @@ SCHOOLS = [
     School(
         school="nfgymuc",
         name="Gymnasium Neufreimann",
-        postcode="80805",
-        city="München",
     ),
     School(
         school="nkgwh",
@@ -1069,7 +1070,7 @@ SCHOOLS = [
     School(
         school="nymph",
         name="Nymphenburger Schulen",
-        postcode="80638",
+        postcode="80639",
         city="München",
     ),
     School(

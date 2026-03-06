@@ -49,12 +49,12 @@ for student in api.students:
 
 ### Methods
 
-| Method                                                                        | Description
-| :---------------------------------------------------------------------------- | :----------
-| `set_config`, `set_config_data`                                               | Set the base configuration
-| `set_option`, `set_option_treshold`, `set_option_register`, `set_option_data` | Set the optional configuration
-| `async_validate_config`                                                       | Validate base config, set property `school_name`
-| `async_update`                                                                | Update data, set properties `students` and `last_update`
+| Method                                                                         | Description
+| :----------------------------------------------------------------------------- | :----------
+| `set_config`, `set_config_data`                                                | Set the base configuration
+| `set_option`, `set_option_threshold`, `set_option_register`, `set_option_data` | Set the optional configuration
+| `async_validate_config`                                                        | Validate base config, set property `school_name`
+| `async_update`                                                                 | Update data, set properties `students` and `last_update`
 
 
 #### `set_config`
@@ -93,17 +93,17 @@ Set the optional configuration.
 | `sicknote`    | `bool` | `False` | Get data of page "meldungen/krankmeldung"?
 
 
-#### `set_option_treshold`
+#### `set_option_threshold`
 
-Set the optional treshold values.
+Set the optional threshold values.
 
 | Parameter              | Type   | Default | Description
 | :--------------------- | :----- | :-----: | :----------
-| `blackboard_treshold`  | `int`  |   -7    | Treshold value (relative to today) for black board sent
-| `letter_treshold`      | `int`  |   -7    | Treshold value (relative to today) for letter sent
-| `message_treshold`     | `int`  |   -7    | Treshold value (relative to today) for message sent
-| `register_treshold`    | `int`  |   +0    | Treshold value (relative to today) for register completion
-| `sicknote_treshold`    | `int`  |   -7    | Treshold value (relative to today) for sick note end
+| `blackboard_threshold`  | `int`  |   -7    | Treshold value (relative to today) for black board sent
+| `letter_threshold`      | `int`  |   -7    | Treshold value (relative to today) for letter sent
+| `message_threshold`     | `int`  |   -7    | Treshold value (relative to today) for message sent
+| `register_threshold`    | `int`  |   +0    | Treshold value (relative to today) for register completion
+| `sicknote_threshold`    | `int`  |   -7    | Treshold value (relative to today) for sick note end
 
 
 #### `set_option_register`

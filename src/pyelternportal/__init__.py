@@ -24,33 +24,33 @@ import bs4
 
 from .const import (
     CONF_APPOINTMENT_CALENDAR,
-    CONF_APPOINTMENT_TRESHOLD_END,
-    CONF_APPOINTMENT_TRESHOLD_START,
-    CONF_BLACKBOARD_TRESHOLD,
-    CONF_LETTER_TRESHOLD,
-    CONF_MESSAGE_TRESHOLD,
-    CONF_POLL_TRESHOLD,
+    CONF_APPOINTMENT_THRESHOLD_END,
+    CONF_APPOINTMENT_THRESHOLD_START,
+    CONF_BLACKBOARD_THRESHOLD,
+    CONF_LETTER_THRESHOLD,
+    CONF_MESSAGE_THRESHOLD,
+    CONF_POLL_THRESHOLD,
     CONF_REGISTER_CALENDAR,
     CONF_REGISTER_SHOW_EMPTY,
     CONF_REGISTER_START_MAX,
     CONF_REGISTER_START_MIN,
-    CONF_REGISTER_TRESHOLD,
+    CONF_REGISTER_THRESHOLD,
     CONF_SICKNOTE_CALENDAR,
-    CONF_SICKNOTE_TRESHOLD,
+    CONF_SICKNOTE_THRESHOLD,
     DEFAULT_APPOINTMENT_CALENDAR,
-    DEFAULT_APPOINTMENT_TRESHOLD_END,
-    DEFAULT_APPOINTMENT_TRESHOLD_START,
-    DEFAULT_BLACKBOARD_TRESHOLD,
-    DEFAULT_LETTER_TRESHOLD,
-    DEFAULT_MESSAGE_TRESHOLD,
-    DEFAULT_POLL_TRESHOLD,
+    DEFAULT_APPOINTMENT_THRESHOLD_END,
+    DEFAULT_APPOINTMENT_THRESHOLD_START,
+    DEFAULT_BLACKBOARD_THRESHOLD,
+    DEFAULT_LETTER_THRESHOLD,
+    DEFAULT_MESSAGE_THRESHOLD,
+    DEFAULT_POLL_THRESHOLD,
     DEFAULT_REGISTER_CALENDAR,
-    DEFAULT_REGISTER_TRESHOLD,
+    DEFAULT_REGISTER_THRESHOLD,
     DEFAULT_REGISTER_SHOW_EMPTY,
     DEFAULT_REGISTER_START_MAX,
     DEFAULT_REGISTER_START_MIN,
     DEFAULT_SICKNOTE_CALENDAR,
-    DEFAULT_SICKNOTE_TRESHOLD,
+    DEFAULT_SICKNOTE_THRESHOLD,
     LOGGER,
     SCHOOL_SUBJECTS,
 )
@@ -99,10 +99,10 @@ VERSION = "0.0.18"
 class ElternPortalAPI:
     """API to retrieve the data."""
 
-    def __init__(self, sesssion: aiohttp.ClientSession):
+    def __init__(self, session: aiohttp.ClientSession):
         """Initialize the API."""
 
-        self._session = sesssion
+        self._session = session
         self._timezone_str = "Europe/Berlin"
         self._beautiful_soup_parser = "html5lib"
 
@@ -128,15 +128,15 @@ class ElternPortalAPI:
         self.register_calendar: bool = DEFAULT_REGISTER_CALENDAR
         self.sicknote_calendar: bool = DEFAULT_SICKNOTE_CALENDAR
 
-        # set_option_treshold
-        self.appointment_treshold_end: int = DEFAULT_APPOINTMENT_TRESHOLD_END
-        self.appointment_treshold_start: int = DEFAULT_APPOINTMENT_TRESHOLD_START
-        self.blackboard_treshold: int = DEFAULT_BLACKBOARD_TRESHOLD
-        self.letter_treshold: int = DEFAULT_LETTER_TRESHOLD
-        self.message_treshold: int = DEFAULT_MESSAGE_TRESHOLD
-        self.poll_treshold: int = DEFAULT_POLL_TRESHOLD
-        self.register_treshold: int = DEFAULT_REGISTER_TRESHOLD
-        self.sicknote_treshold: int = DEFAULT_SICKNOTE_TRESHOLD
+        # set_option_threshold
+        self.appointment_threshold_end: int = DEFAULT_APPOINTMENT_THRESHOLD_END
+        self.appointment_threshold_start: int = DEFAULT_APPOINTMENT_THRESHOLD_START
+        self.blackboard_threshold: int = DEFAULT_BLACKBOARD_THRESHOLD
+        self.letter_threshold: int = DEFAULT_LETTER_THRESHOLD
+        self.message_threshold: int = DEFAULT_MESSAGE_THRESHOLD
+        self.poll_threshold: int = DEFAULT_POLL_THRESHOLD
+        self.register_threshold: int = DEFAULT_REGISTER_THRESHOLD
+        self.sicknote_threshold: int = DEFAULT_SICKNOTE_THRESHOLD
 
         # set_option_register
         self.register_start_min: int = DEFAULT_REGISTER_START_MIN
@@ -241,35 +241,35 @@ class ElternPortalAPI:
             sicknote_calendar,
         )
 
-        appointment_treshold_end: int = option.get(
-            CONF_APPOINTMENT_TRESHOLD_END, DEFAULT_APPOINTMENT_TRESHOLD_END
+        appointment_threshold_end: int = option.get(
+            CONF_APPOINTMENT_THRESHOLD_END, DEFAULT_APPOINTMENT_THRESHOLD_END
         )
-        appointment_treshold_start: int = option.get(
-            CONF_APPOINTMENT_TRESHOLD_START, DEFAULT_APPOINTMENT_TRESHOLD_START
+        appointment_threshold_start: int = option.get(
+            CONF_APPOINTMENT_THRESHOLD_START, DEFAULT_APPOINTMENT_THRESHOLD_START
         )
-        blackboard_treshold: int = option.get(
-            CONF_BLACKBOARD_TRESHOLD, DEFAULT_BLACKBOARD_TRESHOLD
+        blackboard_threshold: int = option.get(
+            CONF_BLACKBOARD_THRESHOLD, DEFAULT_BLACKBOARD_THRESHOLD
         )
-        letter_treshold: int = option.get(CONF_LETTER_TRESHOLD, DEFAULT_LETTER_TRESHOLD)
-        message_treshold: int = option.get(
-            CONF_MESSAGE_TRESHOLD, DEFAULT_MESSAGE_TRESHOLD
+        letter_threshold: int = option.get(CONF_LETTER_THRESHOLD, DEFAULT_LETTER_THRESHOLD)
+        message_threshold: int = option.get(
+            CONF_MESSAGE_THRESHOLD, DEFAULT_MESSAGE_THRESHOLD
         )
-        poll_treshold: int = option.get(CONF_POLL_TRESHOLD, DEFAULT_POLL_TRESHOLD)
-        register_treshold: int = option.get(
-            CONF_REGISTER_TRESHOLD, DEFAULT_REGISTER_TRESHOLD
+        poll_threshold: int = option.get(CONF_POLL_THRESHOLD, DEFAULT_POLL_THRESHOLD)
+        register_threshold: int = option.get(
+            CONF_REGISTER_THRESHOLD, DEFAULT_REGISTER_THRESHOLD
         )
-        sicknote_treshold: int = option.get(
-            CONF_SICKNOTE_TRESHOLD, DEFAULT_SICKNOTE_TRESHOLD
+        sicknote_threshold: int = option.get(
+            CONF_SICKNOTE_THRESHOLD, DEFAULT_SICKNOTE_THRESHOLD
         )
-        self.set_option_treshold(
-            appointment_treshold_end,
-            appointment_treshold_start,
-            blackboard_treshold,
-            letter_treshold,
-            message_treshold,
-            poll_treshold,
-            register_treshold,
-            sicknote_treshold,
+        self.set_option_threshold(
+            appointment_threshold_end,
+            appointment_threshold_start,
+            blackboard_threshold,
+            letter_threshold,
+            message_threshold,
+            poll_threshold,
+            register_threshold,
+            sicknote_threshold,
         )
 
         register_start_min: int = option.get(
@@ -299,27 +299,27 @@ class ElternPortalAPI:
         self.register_calendar = register_calendar
         self.sicknote_calendar = sicknote_calendar
 
-    def set_option_treshold(
+    def set_option_threshold(
         self,
-        appointment_treshold_end: int = DEFAULT_APPOINTMENT_TRESHOLD_END,
-        appointment_treshold_start: int = DEFAULT_APPOINTMENT_TRESHOLD_START,
-        blackboard_treshold: int = DEFAULT_BLACKBOARD_TRESHOLD,
-        letter_treshold: int = DEFAULT_LETTER_TRESHOLD,
-        message_treshold: int = DEFAULT_MESSAGE_TRESHOLD,
-        poll_treshold: int = DEFAULT_POLL_TRESHOLD,
-        register_treshold: int = DEFAULT_REGISTER_TRESHOLD,
-        sicknote_treshold: int = DEFAULT_SICKNOTE_TRESHOLD,
+        appointment_threshold_end: int = DEFAULT_APPOINTMENT_THRESHOLD_END,
+        appointment_threshold_start: int = DEFAULT_APPOINTMENT_THRESHOLD_START,
+        blackboard_threshold: int = DEFAULT_BLACKBOARD_THRESHOLD,
+        letter_threshold: int = DEFAULT_LETTER_THRESHOLD,
+        message_threshold: int = DEFAULT_MESSAGE_THRESHOLD,
+        poll_threshold: int = DEFAULT_POLL_THRESHOLD,
+        register_threshold: int = DEFAULT_REGISTER_THRESHOLD,
+        sicknote_threshold: int = DEFAULT_SICKNOTE_THRESHOLD,
     ) -> None:
-        """Initialize the option treshold."""
+        """Initialize the option threshold."""
 
-        self.appointment_treshold_end = appointment_treshold_end
-        self.appointment_treshold_start = appointment_treshold_start
-        self.blackboard_treshold = blackboard_treshold
-        self.letter_treshold = letter_treshold
-        self.message_treshold = message_treshold
-        self.poll_treshold = poll_treshold
-        self.register_treshold = register_treshold
-        self.sicknote_treshold = sicknote_treshold
+        self.appointment_threshold_end = appointment_threshold_end
+        self.appointment_threshold_start = appointment_threshold_start
+        self.blackboard_threshold = blackboard_threshold
+        self.letter_threshold = letter_threshold
+        self.message_threshold = message_threshold
+        self.poll_threshold = poll_threshold
+        self.register_threshold = register_threshold
+        self.sicknote_threshold = sicknote_threshold
 
     def set_option_register(
         self,
@@ -688,7 +688,7 @@ class ElternPortalAPI:
         """Elternportal blackboard."""
 
         self._student.blackboards = []
-        treshold = date.today() + timedelta(days=self.blackboard_treshold)
+        threshold = date.today() + timedelta(days=self.blackboard_threshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         tags = soup.select("#asam_content .grid .grid-item .well")
@@ -715,7 +715,7 @@ class ElternPortalAPI:
             a = tag.select_one("p:nth-child(4) a")
             attachment: Attachment = tag2attachment(a) if a else None
 
-            if sent >= treshold:
+            if sent >= threshold:
                 blackboard = BlackBoard(
                     sent=sent,
                     subject=subject,
@@ -793,7 +793,7 @@ class ElternPortalAPI:
         """Elternportal letter."""
 
         self._student.letters = []
-        treshold = datetime.now() + timedelta(days=self.letter_treshold)
+        threshold = datetime.now() + timedelta(days=self.letter_threshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         tags = soup.select(".link_nachrichten")
@@ -850,7 +850,7 @@ class ElternPortalAPI:
                     if line.startswith("Klasse/n: "):
                         skip = False
 
-            if new or sent >= treshold:
+            if new or sent >= threshold:
                 letter = Letter(
                     letter_id=letter_id,
                     number=number,
@@ -920,7 +920,7 @@ class ElternPortalAPI:
     async def async_message_teacher_parse(self, html: str) -> None:
         """Elternportal message teacher (parse)."""
 
-        treshold = datetime.now() + timedelta(days=self.message_treshold)
+        threshold = datetime.now() + timedelta(days=self.message_threshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         tags = soup.select(
@@ -955,7 +955,7 @@ class ElternPortalAPI:
                         href
                     )
 
-                if sent >= treshold:
+                if sent >= threshold:
                     message = Message(
                         sender=sender,
                         sent=sent,
@@ -1022,7 +1022,7 @@ class ElternPortalAPI:
         """Elternportal poll (parse)."""
 
         self._student.polls = []
-        treshold = date.today() + timedelta(days=self.poll_treshold)
+        threshold = date.today() + timedelta(days=self.poll_threshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         rows = soup.select("#asam_content div.row.m_bot")
@@ -1060,7 +1060,7 @@ class ElternPortalAPI:
                 else:
                     detail = await self.async_poll_detail_online(href)
 
-            if end >= treshold:
+            if end >= threshold:
                 poll = Poll(
                     title=title,
                     href=href,
@@ -1133,7 +1133,7 @@ class ElternPortalAPI:
     ) -> None:
         """Elternportal register (parse)."""
 
-        treshold = date.today() + timedelta(days=self.register_treshold)
+        threshold = date.today() + timedelta(days=self.register_threshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         tables = soup.select("#asam_content table.table.table-bordered")
@@ -1221,7 +1221,7 @@ class ElternPortalAPI:
 
                             attachments.append(attachment)
 
-            if date_completion >= treshold:
+            if date_completion >= threshold:
                 if self.register_show_empty or not empty or attachments:
                     register = Register(
                         subject=subject,

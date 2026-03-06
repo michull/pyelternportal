@@ -214,7 +214,7 @@ DEMO_HTML_SICKNOTE = """
 <!DOCTYPE html>
 <html>
 <body >
-<div class='' id='asam_content'>
+<div class="content">
 <table class="ui table">
 <tr>
 <td class="one wide">

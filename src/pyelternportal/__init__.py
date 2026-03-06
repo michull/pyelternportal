@@ -628,19 +628,41 @@ class ElternPortalAPI:
 
         for result in appointments["result"]:
             start = int(str(result["start"])[0:-3])
-            start = datetime.fromtimestamp(start, timezone).date()
+            start = datetime.fromtimestamp(start, timezone)
             end = int(str(result["end"])[0:-3])
-            end = datetime.fromtimestamp(end, timezone).date()
-
-            appointment = Appointment(
-                result["id"],
-                result["title"],
-                result["title_short"],
-                result["class"],
-                start,
-                end,
-            )
-            self._student.appointments.append(appointment)
+            end = datetime.fromtimestamp(end, timezone)
+            end = end + timedelta(hours=2) # add always two hours
+            
+            title_short = result["title_short"]
+            append = True
+            append = append and re.search('^Allerheiligen', title_short) is None
+            append = append and re.search('^Tag der Deutschen Einheit', title_short) is None
+            append = append and re.search('^Weltkindertag', title_short) is None
+            append = append and re.search('^Feiertag: ', title_short) is None
+            append = append and re.search('^Othodoxer Feiertag ', title_short) is None
+            append = append and re.search('^Islamischer Feiertag ', title_short) is None
+            if append:
+                match = re.search(r"(\d\d):(\d\d) - (\d\d):(\d\d)<br \/>([^<>]+)<br>", title_short)
+                if match:
+                    title_short = match.group(5)
+                else:
+                    match = re.search("([^<>]+)<br>", title_short)
+                    if match:
+                        title_short = match.group(1)
+                    else:
+                        title_short = title_short
+                
+                #title_short = ' '.join(hex(ord(x))[2:] for x in result["title_short"])
+                
+                appointment = Appointment(
+                    result["id"],
+                    result["title"],
+                    title_short,
+                    result["class"],
+                    start,
+                    end,
+                )
+                self._student.appointments.append(appointment)
 
         self._student.appointments.sort(
             key=lambda appointment: (appointment.start, appointment.end)
@@ -1298,6 +1320,9 @@ class ElternPortalAPI:
             else:
                 if len(cells) > 2:
                     comment = cells[2].get_text()
+
+            if comment:
+                comment = comment.strip()
 
             if comment == "":
                 comment = None

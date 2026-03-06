@@ -116,8 +116,8 @@ for s in data:
 with open(path_md, mode="w", encoding="utf-8") as fh:
     fh.write("# Known instances of Eltern-Portal\n")
     fh.write("\n")
-    fh.write("Identifier | Url                                   | School\n")
-    fh.write(":--------- | :------------------------------------ | :-----\n")
+    fh.write("Identifier  | Url                                   | School\n")
+    fh.write(":---------- | :------------------------------------ | :-----\n")
     for s in data:
         if s.get("exists", False):
             identifier = s["school"]
@@ -133,7 +133,7 @@ with open(path_md, mode="w", encoding="utf-8") as fh:
                     if "city" in geo and geo["city"] is not None:
                         school += ", " + geo["city"]
 
-            fh.write(f"{identifier:<10} | {url:<37} | {school}\n")
+            fh.write(f"{identifier:<11} | {url:<37} | {school}\n")
 
 with open(file=path_py, mode="w", encoding="utf-8") as fh:
     fh.write('"""Known instances of eltern-portal.org"""\n\n')

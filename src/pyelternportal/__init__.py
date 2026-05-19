@@ -37,6 +37,7 @@ from .const import (
     CONF_REGISTER_THRESHOLD,
     CONF_SICKNOTE_CALENDAR,
     CONF_SICKNOTE_THRESHOLD,
+    CONF_SUBSTITUTION_TRESHOLD,
     DEFAULT_APPOINTMENT_CALENDAR,
     DEFAULT_APPOINTMENT_THRESHOLD_END,
     DEFAULT_APPOINTMENT_THRESHOLD_START,
@@ -51,6 +52,7 @@ from .const import (
     DEFAULT_REGISTER_START_MIN,
     DEFAULT_SICKNOTE_CALENDAR,
     DEFAULT_SICKNOTE_THRESHOLD,
+    DEFAULT_SUBSTITUTION_TRESHOLD,
     LOGGER,
     SCHOOL_SUBJECTS,
 )
@@ -75,6 +77,7 @@ from .poll import Poll
 from .student import Student
 from .register import Register
 from .sicknote import SickNote
+from .substitution import Substitution
 
 from .demo import (
     DEMO_HTML_BASE,
@@ -90,10 +93,11 @@ from .demo import (
     DEMO_HTML_POLL_DETAIL,
     DEMO_HTML_REGISTER,
     DEMO_HTML_SICKNOTE,
+    DEMO_HTML_SUBSTITUTION,
     DEMO_JSON_APPOINTMENT,
 )
 
-VERSION = "0.0.18"
+VERSION = "0.0.20"
 
 
 class ElternPortalAPI:
@@ -122,6 +126,7 @@ class ElternPortalAPI:
         self.poll: bool = False
         self.register: bool = False
         self.sicknote: bool = False
+        self.substitution: bool = False
 
         # set_option_calendar
         self.appointment_calendar: bool = DEFAULT_APPOINTMENT_CALENDAR
@@ -137,6 +142,7 @@ class ElternPortalAPI:
         self.poll_threshold: int = DEFAULT_POLL_THRESHOLD
         self.register_threshold: int = DEFAULT_REGISTER_THRESHOLD
         self.sicknote_threshold: int = DEFAULT_SICKNOTE_THRESHOLD
+        self.substitution_treshold: int = DEFAULT_SUBSTITUTION_TRESHOLD
 
         # set_option_register
         self.register_start_min: int = DEFAULT_REGISTER_START_MIN
@@ -199,6 +205,7 @@ class ElternPortalAPI:
         poll: bool = False,
         register: bool = False,
         sicknote: bool = False,
+        substitution: bool = False,
     ) -> None:
         """Initialize the option."""
 
@@ -210,6 +217,7 @@ class ElternPortalAPI:
         self.poll = poll
         self.register = register
         self.sicknote = sicknote
+        self.substitution = substitution
 
     def set_option_data(self, option: Dict[str, Any]) -> None:
         """Initialize the option data."""
@@ -222,8 +230,9 @@ class ElternPortalAPI:
         poll: bool = option.get("poll", False)
         register: bool = option.get("register", False)
         sicknote: bool = option.get("sicknote", False)
+        substitution: bool = option.get("substitution", False)
         self.set_option(
-            appointment, blackboard, lesson, letter, message, poll, register, sicknote
+            appointment, blackboard, lesson, letter, message, poll, register, sicknote, substitution
         )
 
         appointment_calendar: bool = option.get(
@@ -261,6 +270,9 @@ class ElternPortalAPI:
         sicknote_threshold: int = option.get(
             CONF_SICKNOTE_THRESHOLD, DEFAULT_SICKNOTE_THRESHOLD
         )
+        substitution_treshold: int = option.get(
+            CONF_SUBSTITUTION_TRESHOLD, DEFAULT_SUBSTITUTION_TRESHOLD
+        )
         self.set_option_threshold(
             appointment_threshold_end,
             appointment_threshold_start,
@@ -270,6 +282,7 @@ class ElternPortalAPI:
             poll_threshold,
             register_threshold,
             sicknote_threshold,
+            substitution_treshold,
         )
 
         register_start_min: int = option.get(
@@ -309,6 +322,7 @@ class ElternPortalAPI:
         poll_threshold: int = DEFAULT_POLL_THRESHOLD,
         register_threshold: int = DEFAULT_REGISTER_THRESHOLD,
         sicknote_threshold: int = DEFAULT_SICKNOTE_THRESHOLD,
+        substitution_treshold: int = DEFAULT_SUBSTITUTION_TRESHOLD,
     ) -> None:
         """Initialize the option threshold."""
 
@@ -320,6 +334,7 @@ class ElternPortalAPI:
         self.poll_threshold = poll_threshold
         self.register_threshold = register_threshold
         self.sicknote_threshold = sicknote_threshold
+        self.substitution_treshold = substitution_treshold
 
     def set_option_register(
         self,
@@ -363,6 +378,8 @@ class ElternPortalAPI:
             result: bool = self.register
         if sensor_key == "sicknote":
             result: bool = self.sicknote
+        if sensor_key == "substitution":
+            result: bool = self.substitution
         return result
 
     async def async_validate_config(self) -> None:
@@ -438,6 +455,9 @@ class ElternPortalAPI:
             if self.sicknote:
                 await self.async_sicknote_demo()
 
+            if self.substitution:
+                await self.async_substitution_demo()
+
         self._student = None
         await self.async_logout_demo()
         self.last_update = datetime.now()
@@ -474,6 +494,9 @@ class ElternPortalAPI:
 
             if self.sicknote:
                 await self.async_sicknote_online()
+
+            if self.substitution:
+                await self.async_substitution_online()
 
         self._student = None
         await self.async_logout_online()
@@ -1331,6 +1354,67 @@ class ElternPortalAPI:
             self._student.sicknotes.append(sicknote)
 
         self._student.sicknotes.sort(key=lambda sicknote: sicknote.start)
+
+    async def async_substitution_demo(self) -> None:
+        """Elternportal substitution (demo)."""
+        await self.async_substitution_parse(DEMO_HTML_SUBSTITUTION)
+
+    async def async_substitution_online(self) -> None:
+        """Elternportal substitution (online)."""
+
+        url_path = "/service/vertretungsplan"
+        url = parse.urljoin(self.base_url, url_path)
+        LOGGER.debug("substitution.url=%s", url)
+        async with self._session.get(url) as response:
+            if response.status != 200:
+                LOGGER.debug("substitution.status=%s", response.status)
+            html = await response.text()
+            await self.async_substitution_parse(html)
+
+    async def async_substitution_parse(self, html: str) -> None:
+        """Elternportal substitution (parse)."""
+
+        self._student.substitutions = []
+        treshold = date.today() + timedelta(days=self.substitution_treshold)
+        soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
+
+        current_date = None
+        tags = soup.select("#asam_content .main_center > *")
+        for tag in tags:
+            if tag.name == "div" and "list" in tag.get("class", []):
+                match = re.search(r"(\d{2}\.\d{2}\.\d{4})", tag.get_text())
+                if match:
+                    current_date = datetime.strptime(match.group(1), "%d.%m.%Y").date()
+
+            elif tag.name == "table" and current_date and current_date >= treshold:
+                rows = tag.select("tbody tr:not(.vp_plan_head)")
+                for row in rows:
+                    cells = row.find_all("td")
+                    if len(cells) == 6:
+                        lesson = cells[0].get_text(strip=True)
+                        original_teacher = cells[1].get_text(strip=True)
+                        substitute_teacher = cells[2].get_text(strip=True)
+                        subject = cells[3].get_text(strip=True)
+                        room = cells[4].get_text(strip=True)
+                        info = cells[5].get_text(strip=True)
+
+                        substitution = Substitution(
+                            date=current_date,
+                            lesson=lesson,
+                            original_teacher=original_teacher,
+                            substitute_teacher=substitute_teacher,
+                            subject=subject,
+                            room=room,
+                            info=info,
+                        )
+                        self._student.substitutions.append(substitution)
+
+        self._student.substitutions.sort(
+            key=lambda substitution: (
+                substitution.date,
+                substitution.lesson,
+            )
+        )
 
     async def async_logout_demo(self) -> None:
         """Elternportal logout (demo)."""

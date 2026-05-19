@@ -19,6 +19,7 @@ CONF_REGISTER_SHOW_EMPTY: str = "register_show_empty"
 CONF_REGISTER_THRESHOLD: str = "register_threshold"
 CONF_SICKNOTE_CALENDAR: str = "sicknote_calendar"
 CONF_SICKNOTE_THRESHOLD: str = "sicknote_threshold"
+CONF_SUBSTITUTION_TRESHOLD: str = "substitution_treshold"
 
 DEFAULT_APPOINTMENT_CALENDAR: bool = False
 DEFAULT_APPOINTMENT_THRESHOLD_END: int = +0
@@ -34,6 +35,7 @@ DEFAULT_REGISTER_START_MAX: int = +5
 DEFAULT_REGISTER_THRESHOLD: int = +1
 DEFAULT_SICKNOTE_CALENDAR: bool = False
 DEFAULT_SICKNOTE_THRESHOLD: int = -7
+DEFAULT_SUBSTITUTION_TRESHOLD: int = 0
 
 SCHOOL_SUBJECTS: list[Dict[str, str]] = [
     {"Short": "B", "Name": "Biologie"},

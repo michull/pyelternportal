@@ -3,9 +3,10 @@
 from datetime import date, datetime, timedelta
 
 DEMO_TODAY = date.today().strftime("%d.%m.%Y")
-DEMO_TOMORROW = (date.today() + timedelta(days=1)).strftime(
-    "%d.%m.%Y"
-)
+DEMO_TOMORROW = (date.today() + timedelta(days=1)).strftime("%d.%m.%Y")
+DEMO_TOMORROW2 = (date.today() + timedelta(days=2)).strftime("%d.%m.%Y")
+DEMO_TOMORROW3 = (date.today() + timedelta(days=3)).strftime("%d.%m.%Y")
+DEMO_TOMORROW4 = (date.today() + timedelta(days=4)).strftime("%d.%m.%Y")
 DEMO_NOW6 = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
 DEMO_NOW5 = datetime.now().strftime("%d.%m.%Y %H:%M")
 DEMO_NAME_D = "Herr Wagner"
@@ -32,9 +33,7 @@ DEMO_HTML_BLACKBOARD = """
 </div></div></div>
 </body>
 </html>
-""".replace(
-    "#TODAY#", DEMO_TODAY
-)
+""".replace("#TODAY#", DEMO_TODAY)
 
 DEMO_HTML_LOGIN = """
 <!DOCTYPE html>
@@ -96,9 +95,7 @@ DEMO_HTML_LESSON = """
 <table class='table_header' width='100%' border='0'><tr><td><h2><img src='/includes/project/images/service_blau_20h.png' style='margin-right:10px;margin-bottom:10px;' />Stundenplan der Klasse<span class='hidden-xs' style='float: right; padding-top: 6px; font-size: 14px; margin-right: 1px;'>[<a href='/includes/pdf_gen.php?opt=6' title='Stundenplan drucken' target='_blank' class='link_service' rel='noopener'>Drucken</a>]</span></h2></td></tr></table><div class='table-responsive'><style>th { text-align: center; }</style><table width='100%' class='table table-condensed table-bordered'><tr><th width='15%' align='center'>&nbsp;</th><th width='17%' align='center'>Montag</th><th width='17%' align='center'>Dienstag</th><th width='17%' align='center'>Mittwoch</th><th width='17%' align='center'>Donnerstag</th><th width='17%' align='center'>Freitag</th></tr><tr><td width='15%' align='center' valign='middle' >0.<br>08.00 - 08.10</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td></tr><tr><td width='15%' align='center' valign='middle' >1.<br>08.10 - 08.55</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Ku<br />OG2_24</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>E<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>M<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>D<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>M<br />OG1_18</span></span></td></tr><tr><td width='15%' align='center' valign='middle' >2.<br>08.55 - 09.40</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Ku<br />OG2_24</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>E<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>M<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>D<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>M<br />OG1_18</span></span></td></tr><tr><td width='15%' align='center' valign='middle' >3.<br>10.00 - 10.45</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>NuT_NWw/Sm<br />OG2_21/</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Geo<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>NuT_NWm/Sw<br />OG2_21/</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Ev/K/Eth<br />OG1_18/OG1_19/OG1_23</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Mu<br />EG_54</span></span></td></tr><tr><td width='15%' align='center' valign='middle' >4.<br>10.45 - 11.30</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>E_Iw/Sm<br />OG1_18/</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Geo<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Sw/E_Im<br />/OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Ev/K/Eth<br />OG1_18/OG1_19/OG1_23</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Mu<br />EG_54</span></span></td></tr><tr><td width='15%' align='center' valign='middle' >5.<br>11.45 - 12.30</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>D<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Sm/Sw<br />/</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>D<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>E<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>NuT_B<br />OG2_21</span></span></td></tr><tr><td width='15%' align='center' valign='middle' >6.<br>12.30 - 13.15</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>E<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Sw/Sm<br />/</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>D<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>E<br />OG1_18</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>NuT_B<br />OG2_21</span></span></td></tr><tr><td width='15%' align='center' valign='middle' >7.<br>13.15 - 14.00</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Chor_US_Wahl<br />EG_54</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Stimm_Wahl/Schach_Wahl<br />EG_54/OG1_15</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Fussball_Wahl/Big_Band_Wahl<br />/EG_54</span></span></td></tr><tr><td width='15%' align='center' valign='middle' >8.<br>14.00 - 14.45</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Ku_Wahl_Werkzeuge/Chor_US_Wahl<br />OG2_24/EG_54</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Ku_Wahl_Foto/D_Fö/Stimm_Wahl<br />OG2_24/OG1_18/EG_54</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Big_Band_Wahl/Fussball_Wahl<br />EG_54/</span></span></td></tr><tr><td width='15%' align='center' valign='middle' >9.<br>14.45 - 15.30</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>TTennis_Wahl/Orch_US_Wahl/Ku_Wahl_Werkzeuge<br />/EG_54/OG2_24</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Ku_Wahl_Foto<br />OG2_24</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td></tr><tr><td width='15%' align='center' valign='middle' >10.<br>15.30 - 16.15</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Orch_US_Wahl<br />EG_54</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Schwim_Wahl<br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span>Ku_Wahl_Foto<br />OG2_24</span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td></tr><tr><td width='15%' align='center' valign='middle' >11.<br>16.15 - 17.00</td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td><td width='17%' align='center' valign='middle' style=''><span style='overflow-x:hidden; word-break:break-all;display: table-cell;'><span><br /></span></span></td></tr></table></div>        </div>
 </body>
 </html>
-""".replace(
-    "#EName#", DEMO_NAME_E
-)
+""".replace("#EName#", DEMO_NAME_E)
 
 DEMO_HTML_LETTER = """
 <!DOCTYPE html>
@@ -111,9 +108,7 @@ Gymnasium Demo</td></tr></table>
 </div>
 </body>
 </html>
-""".replace(
-    "#NOW#", DEMO_NOW6
-)
+""".replace("#NOW#", DEMO_NOW6)
 
 DEMO_HTML_POLL = """
 <!DOCTYPE html>
@@ -145,9 +140,7 @@ DEMO_HTML_POLL = """
 </div>
 </body>
 </html>
-""".replace(
-    "#TODAY#", DEMO_TODAY
-)
+""".replace("#TODAY#", DEMO_TODAY)
 
 DEMO_HTML_POLL_DETAIL = """
 <!DOCTYPE html>
@@ -201,9 +194,7 @@ target='_self'>Rucksack Beispieldaten.pdf</a> (460.8 KB)<br /></td></tr></tbody>
 </div>
 </body>
 </html>
-    """.replace(
-        "#NAME_D#", DEMO_NAME_D
-    )
+    """.replace("#NAME_D#", DEMO_NAME_D)
     .replace("#NAME_E#", DEMO_NAME_E)
     .replace("#NAME_M#", DEMO_NAME_M)
     .replace("#NAME_KU#", DEMO_NAME_KU)
@@ -228,9 +219,7 @@ DEMO_HTML_SICKNOTE = """
 </div>
 </body>
 </html>
-""".replace(
-    "#TODAY#", DEMO_TODAY
-)
+""".replace("#TODAY#", DEMO_TODAY)
 
 DEMO_HTML_MESSAGE = """
 <!DOCTYPE html>
@@ -252,11 +241,7 @@ DEMO_HTML_MESSAGE = """
 </div>
 </body>
 </html>
-""".replace(
-    "#NAME_D#", DEMO_NAME_D
-).replace(
-    "#NOW#", DEMO_NOW5
-)
+""".replace("#NAME_D#", DEMO_NAME_D).replace("#NOW#", DEMO_NOW5)
 
 DEMO_HTML_MESSAGE_TEACHER = """
 <!DOCTYPE html>
@@ -267,11 +252,7 @@ DEMO_HTML_MESSAGE_TEACHER = """
 </div>
 </body>
 </html>
-""".replace(
-    "#NAME_D#", DEMO_NAME_D
-).replace(
-    "#NOW#", DEMO_NOW5
-)
+""".replace("#NAME_D#", DEMO_NAME_D).replace("#NOW#", DEMO_NOW5)
 
 DEMO_HTML_MESSAGE_DETAIL = """
 <!DOCTYPE html>
@@ -295,8 +276,37 @@ Liebe Grüße<br />
 #NAME_D#</div></div></div></div>
 </body>
 </html>
-""".replace(
-    "#NAME_D#", DEMO_NAME_D
-).replace(
-    "#TODAY#", DEMO_TODAY
+""".replace("#NAME_D#", DEMO_NAME_D).replace("#TODAY#", DEMO_TODAY)
+
+
+DEMO_HTML_SUBSTITUTION = (
+    """
+<!DOCTYPE html>
+<html>
+<body>
+<div class="" id="asam_content">
+<h2><img src="/includes/project/images/service_blau_20h.png" style="margin-right:10px;margin-bottom:10px;"> Vertretungsplan der Klasse 5a</h2><div class="main_center"><div class="list bold full_width text_center">Mo., #TODAY# - KW 41</div><table class="table" style="min-width: 75%;"><tbody><tr class="vp_plan_head"><td width="10%" align="left" class="table_header text-center">Std.</td>
+<td width="15%" align="left" class="table_header text-center">Betrifft.</td><td width="15%" align="left" class="table_header text-center">Vertretung</td><td width="15%" align="left" class="table_header text-center">Fach</td><td width="15%" align="left" class="table_header text-center">Raum</td><td width="30%" align="left" class="table_header text-center">Info</td></tr><tr class="">
+<td width="100%" colspan="6" align="center" valign="top">Keine Vertretungen für die 5a</td></tr></tbody></table><div class="list bold full_width text_center">Di., #TOMORROW# - KW 41</div><table class="table" style="min-width: 75%;"><tbody><tr class="vp_plan_head"><td width="10%" align="left" class="table_header text-center">Std.</td><td width="15%" align="left" class="table_header text-center">Betrifft.</td>
+<td width="15%" align="left" class="table_header text-center">Vertretung</td><td width="15%" align="left" class="table_header text-center">Fach</td><td width="15%" align="left" class="table_header text-center">Raum</td><td width="30%" align="left" class="table_header text-center">Info</td></tr><tr class="liste_grau"><td width="10%" align="left" class="text_center">1.</td>
+<td width="15%" align="left" class="text_center">#NAME_D#</td><td width="15%" align="left" class="text_center">#NAME_D#</td><td width="15%" align="left" class="text_center">NuT</td><td width="15%" align="left" class="text_center">N106</td><td width="30%" align="left" class="text-center">Raumänderung</td></tr><tr class="liste_weiss"><td width="10%" align="left" class="text_center">3.</td>
+<td width="15%" align="left" class="text_center">#NAME_E#</td><td width="15%" align="left" class="text_center">#NAME_E#</td><td width="15%" align="left" class="text_center"><span style="text-decoration: line-through;">&nbsp;D&nbsp;</span> D</td><td width="15%" align="left" class="text_center">Bib</td><td width="30%" align="left" class="text-center">RaumänderungBibliotheksführung</td></tr><tr class="liste_grau">
+<td width="10%" align="left" class="text_center">4.</td><td width="15%" align="left" class="text_center">#NAME_E#</td><td width="15%" align="left" class="text_center">#NAME_E#</td><td width="15%" align="left" class="text_center"><span style="text-decoration: line-through;">&nbsp;D&nbsp;</span> D</td><td width="15%" align="left" class="text_center">Bib</td>
+<td width="30%" align="left" class="text-center">RaumänderungBibliotheksführung</td></tr></tbody></table><div class="list bold full_width text_center">Mi., #TOMORROW2# - KW 41</div><table class="table" style="min-width: 75%;"><tbody><tr class="vp_plan_head"><td width="10%" align="left" class="table_header text-center">Std.</td><td width="15%" align="left" class="table_header text-center">Betrifft.</td>
+<td width="15%" align="left" class="table_header text-center">Vertretung</td><td width="15%" align="left" class="table_header text-center">Fach</td><td width="15%" align="left" class="table_header text-center">Raum</td><td width="30%" align="left" class="table_header text-center">Info</td></tr><tr class="liste_grau"><td width="10%" align="left" class="text_center">2.</td>
+<td width="15%" align="left" class="text_center">#NAME_KU#</td><td width="15%" align="left" class="text_center">#NAME_KU#</td><td width="15%" align="left" class="text_center"><span style="text-decoration: line-through;">&nbsp;M&nbsp;</span> M</td><td width="15%" align="left" class="text_center">N101</td>
+<td width="30%" align="left" class="text-center">SondereinsatzSchulwegtraining, Treffpunkt Klassenzimmer</td></tr></tbody></table><div class="list bold full_width text_center">Do., #TOMORROW3# - KW 41</div><table class="table" style="min-width: 75%;"><tbody><tr class="vp_plan_head"><td width="10%" align="left" class="table_header text-center">Std.</td>
+<td width="15%" align="left" class="table_header text-center">Betrifft.</td><td width="15%" align="left" class="table_header text-center">Vertretung</td><td width="15%" align="left" class="table_header text-center">Fach</td><td width="15%" align="left" class="table_header text-center">Raum</td>
+<td width="30%" align="left" class="table_header text-center">Info</td></tr><tr class=""><td width="100%" colspan="6" align="center" valign="top">Keine Vertretungen für die 5a</td></tr></tbody></table><div class="list bold full_width text_center">Fr., #TOMORROW4# - KW 41</div><table class="table" style="min-width: 75%;"><tbody><tr class="vp_plan_head"><td width="10%" align="left" class="table_header text-center">Std.</td><td width="15%" align="left" class="table_header text-center">Betrifft.</td><td width="15%" align="left" class="table_header text-center">Vertretung</td><td width="15%" align="left" class="table_header text-center">Fach</td><td width="15%" align="left" class="table_header text-center">Raum</td><td width="30%" align="left" class="table_header text-center">Info</td></tr><tr class="liste_grau"><td width="10%" align="left" class="text_center">6.</td><td width="15%" align="left" class="text_center">#NAME_M#</td><td width="15%" align="left" class="text_center">&nbsp;</td><td width="15%" align="left" class="text_center">E</td><td width="15%" align="left" class="text_center">N101</td><td width="30%" align="left" class="text-center">entfällt</td></tr></tbody></table><div class="list full_width">Stand:&nbsp;#TODAY#&nbsp;19:01:30</div><p class="pull-left" style="width: 100%;">Der hier dargestellte Vertretungsplan ist unverbindlich. Kurzfristige Änderungen sind jederzeit möglich.</p></div><hr><table class="" width="100%" border="0"><tbody><tr><td><b>Mitglied in Klassenteilungen</b></td><td><b>Mitglied in Schülergruppe/n</b></td></tr><tr><td valign="top">5_Mu_5a_Geer, Musik<br>5_Ev_5ad_Nico, Evang. Religionslehre<br></td><td valign="top">OGTS<br></td></tr></tbody></table>
+</div>
+</body></html>
+""".replace("#TODAY#", DEMO_TODAY)
+    .replace("#TOMORROW#", DEMO_TOMORROW)
+    .replace("#TOMORROW2#", DEMO_TOMORROW2)
+    .replace("#TOMORROW3#", DEMO_TOMORROW3)
+    .replace("#TOMORROW4#", DEMO_TOMORROW4)
+    .replace("#NAME_D#", DEMO_NAME_D)
+    .replace("#NAME_E#", DEMO_NAME_E)
+    .replace("#NAME_KU#", DEMO_NAME_KU)
+    .replace("#NAME_M#", DEMO_NAME_M)
 )

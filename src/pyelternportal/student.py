@@ -13,6 +13,7 @@ from .message import Message
 from .poll import Poll
 from .register import Register
 from .sicknote import SickNote
+from .substitution import Substitution
 
 
 class Student:
@@ -44,6 +45,7 @@ class Student:
         self.polls: list[Poll] = []
         self.registers: list[Register] = []
         self.sicknotes: list[SickNote] = []
+        self.substitutions: list[Substitution] = []
 
     def get_list(self, key: str) -> list[Any] | None:
         """Get list of elements"""
@@ -64,6 +66,8 @@ class Student:
                 result: list[Register] = self.registers
             case "sicknotes":
                 result: list[SickNote] = self.sicknotes
+            case "substitutions":
+                result: list[Substitution] = self.substitutions
             case _:
                 result = None
         return result
@@ -87,6 +91,8 @@ class Student:
                 result: int = len(self.registers)
             case "sicknotes":
                 result: int = len(self.sicknotes)
+            case "substitutions":
+                result: int = len(self.substitutions)
             case _:
                 result = None
         return result

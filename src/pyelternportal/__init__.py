@@ -37,7 +37,7 @@ from .const import (
     CONF_REGISTER_THRESHOLD,
     CONF_SICKNOTE_CALENDAR,
     CONF_SICKNOTE_THRESHOLD,
-    CONF_SUBSTITUTION_TRESHOLD,
+    CONF_SUBSTITUTION_THRESHOLD,
     DEFAULT_APPOINTMENT_CALENDAR,
     DEFAULT_APPOINTMENT_THRESHOLD_END,
     DEFAULT_APPOINTMENT_THRESHOLD_START,
@@ -52,7 +52,7 @@ from .const import (
     DEFAULT_REGISTER_START_MIN,
     DEFAULT_SICKNOTE_CALENDAR,
     DEFAULT_SICKNOTE_THRESHOLD,
-    DEFAULT_SUBSTITUTION_TRESHOLD,
+    DEFAULT_SUBSTITUTION_THRESHOLD,
     LOGGER,
     SCHOOL_SUBJECTS,
 )
@@ -142,7 +142,7 @@ class ElternPortalAPI:
         self.poll_threshold: int = DEFAULT_POLL_THRESHOLD
         self.register_threshold: int = DEFAULT_REGISTER_THRESHOLD
         self.sicknote_threshold: int = DEFAULT_SICKNOTE_THRESHOLD
-        self.substitution_treshold: int = DEFAULT_SUBSTITUTION_TRESHOLD
+        self.substitution_threshold: int = DEFAULT_SUBSTITUTION_THRESHOLD
 
         # set_option_register
         self.register_start_min: int = DEFAULT_REGISTER_START_MIN
@@ -270,8 +270,8 @@ class ElternPortalAPI:
         sicknote_threshold: int = option.get(
             CONF_SICKNOTE_THRESHOLD, DEFAULT_SICKNOTE_THRESHOLD
         )
-        substitution_treshold: int = option.get(
-            CONF_SUBSTITUTION_TRESHOLD, DEFAULT_SUBSTITUTION_TRESHOLD
+        substitution_threshold: int = option.get(
+            CONF_SUBSTITUTION_THRESHOLD, DEFAULT_SUBSTITUTION_THRESHOLD
         )
         self.set_option_threshold(
             appointment_threshold_end,
@@ -282,7 +282,7 @@ class ElternPortalAPI:
             poll_threshold,
             register_threshold,
             sicknote_threshold,
-            substitution_treshold,
+            substitution_threshold,
         )
 
         register_start_min: int = option.get(
@@ -322,7 +322,7 @@ class ElternPortalAPI:
         poll_threshold: int = DEFAULT_POLL_THRESHOLD,
         register_threshold: int = DEFAULT_REGISTER_THRESHOLD,
         sicknote_threshold: int = DEFAULT_SICKNOTE_THRESHOLD,
-        substitution_treshold: int = DEFAULT_SUBSTITUTION_TRESHOLD,
+        substitution_threshold: int = DEFAULT_SUBSTITUTION_THRESHOLD,
     ) -> None:
         """Initialize the option threshold."""
 
@@ -334,7 +334,7 @@ class ElternPortalAPI:
         self.poll_threshold = poll_threshold
         self.register_threshold = register_threshold
         self.sicknote_threshold = sicknote_threshold
-        self.substitution_treshold = substitution_treshold
+        self.substitution_threshold = substitution_threshold
 
     def set_option_register(
         self,
@@ -1375,7 +1375,7 @@ class ElternPortalAPI:
         """Elternportal substitution (parse)."""
 
         self._student.substitutions = []
-        treshold = date.today() + timedelta(days=self.substitution_treshold)
+        threshold = date.today() + timedelta(days=self.substitution_threshold)
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
         current_date = None
@@ -1386,7 +1386,7 @@ class ElternPortalAPI:
                 if match:
                     current_date = datetime.strptime(match.group(1), "%d.%m.%Y").date()
 
-            elif tag.name == "table" and current_date and current_date >= treshold:
+            elif tag.name == "table" and current_date and current_date >= threshold:
                 rows = tag.select("tbody tr:not(.vp_plan_head)")
                 for row in rows:
                     cells = row.find_all("td")

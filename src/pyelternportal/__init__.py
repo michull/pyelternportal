@@ -1391,9 +1391,11 @@ class ElternPortalAPI:
                 for row in rows:
                     cells = row.find_all("td")
                     if len(cells) == 6:
-                        lesson = cells[0].get_text(strip=True)
+                        lesson = cells[0].get_text(strip=True).removesuffix(".")
                         original_teacher = cells[1].get_text(strip=True)
                         substitute_teacher = cells[2].get_text(strip=True)
+                        for span in cells[3].select("span[style*='line-through']"):
+                            span.decompose()
                         subject = cells[3].get_text(strip=True)
                         room = cells[4].get_text(strip=True)
                         info = cells[5].get_text(strip=True)

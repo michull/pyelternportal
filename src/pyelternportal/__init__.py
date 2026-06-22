@@ -829,8 +829,18 @@ class ElternPortalAPI:
             attachment = tag.name == "a"
 
             # sent
-            match = re.search(r"\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}:\d{2}", tag.get_text())
-            sent = datetime.strptime(match[0], "%d.%m.%Y %H:%M:%S") if match else None
+            text = tag.get_text()
+            date_match = re.search(r"\d{2}\.\d{2}\.\d{4}", text)
+            sent_date = date_match[0] if date_match else None
+            time_match = re.search(r"\d{2}:\d{2}", text)
+            sent_time = time_match[0] if time_match else None
+
+            if sent_date is None:
+                sent = None
+            elif sent_time is None:
+                sent = datetime.strptime(sent_date, "%d.%m.%Y")
+            else:
+                sent = datetime.strptime(f"{sent_date} {sent_time}", "%d.%m.%Y %H:%M")
 
             # new + number
             cell = soup.find("td", {"id": "empf_" + letter_id})
@@ -873,7 +883,7 @@ class ElternPortalAPI:
                     if line.startswith("Klasse/n: "):
                         skip = False
 
-            if new or sent >= threshold:
+            if new or (sent is not None and sent >= threshold):
                 letter = Letter(
                     letter_id=letter_id,
                     number=number,

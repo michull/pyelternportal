@@ -97,7 +97,7 @@ from .demo import (
     DEMO_JSON_APPOINTMENT,
 )
 
-VERSION = "0.0.22"
+VERSION = "0.0.23"
 
 
 class ElternPortalAPI:
@@ -531,23 +531,32 @@ class ElternPortalAPI:
 
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
-        try:
-            tag = soup.find("input", {"name": "csrf"})
-            csrf = tag["value"]
-            self._csrf = csrf
-        except TypeError as te:
-            message = "The 'input' tag with the name 'csrf' could not be found."
-            LOGGER.exception(message)
-            raise CannotConnectException(message) from te
+        title_tag = soup.find("title")
+        title = title_tag.get_text(strip=True) if title_tag is not None else None
 
-        try:
-            tag = soup.find("h2", {"id": "schule"})
-            school_name = tag.get_text()
-            self.school_name = school_name
-        except TypeError as te:
-            message = "The 'h2' tag with the id 'schule' could not be found."
-            LOGGER.exception(message)
-            raise CannotConnectException(message) from te
+        tag = soup.find("input", {"name": "csrf"})
+        csrf = tag.get("value") if tag is not None else None
+        if not csrf:
+            message = (
+                f"The login page of {self.base_url} does not contain a login form "
+                f"(no 'csrf' token found, page title: {title!r}). "
+                "The portal may be under maintenance or temporarily unavailable."
+            )
+            LOGGER.error(message)
+            LOGGER.debug("base.html=%s", html[:2000])
+            raise CannotConnectException(message)
+        self._csrf = csrf
+
+        tag = soup.find("h2", {"id": "schule"})
+        if tag is None:
+            message = (
+                f"The login page of {self.base_url} does not contain the school name "
+                f"(no 'h2' tag with id 'schule' found, page title: {title!r})."
+            )
+            LOGGER.error(message)
+            LOGGER.debug("base.html=%s", html[:2000])
+            raise CannotConnectException(message)
+        self.school_name = tag.get_text()
 
     async def async_login_demo(self) -> None:
         """Elternportal login (demo)."""

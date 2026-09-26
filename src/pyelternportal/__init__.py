@@ -889,9 +889,22 @@ class ElternPortalAPI:
                         if cell in x.parents and span not in x.parents
                     ]
 
-                body = ""
+                # one line per block/<br>; inline markup (<strong> etc.) is joined
+                inline = {"a", "b", "em", "font", "i", "small", "span", "strong", "u"}
+                parts = []
+                prev_block = None
                 for line in lines:
-                    body += line.replace("\r", "").replace("\n", "") + "\n"
+                    block = line.parent
+                    while block is not None and block.name in inline:
+                        block = block.parent
+                    text = line.replace("\r", "").replace("\n", "")
+                    prev = line.previous_element
+                    if parts and block is prev_block and prev.name != "br":
+                        parts[-1] += text
+                    else:
+                        parts.append(text)
+                    prev_block = block
+                body = "\n".join(x.strip() for x in parts).strip()
 
             if new or (sent is not None and sent >= threshold):
                 letter = Letter(

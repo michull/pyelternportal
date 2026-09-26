@@ -874,23 +874,24 @@ class ElternPortalAPI:
                 distribution = None
                 body = None
             else:
-                span = cell.select_one("span[style='font-size: 8pt;']")
+                span = cell.select_one("span.small.text, span[style='font-size: 8pt;']")
                 if span is None:
                     distribution = None
+                    lines = []
                 else:
-                    text = span.get_text()
-                    liste = text.split("Klasse/n: ")
-                    liste = [x for x in liste if x]
+                    text = span.get_text().replace(chr(0xa0), " ")
+                    liste = re.split(r"\s*Klasse/n:\s*", text)
+                    liste = [x.strip() for x in liste if x.strip()]
                     distribution = ", ".join(liste)
+                    lines = [
+                        x
+                        for x in span.find_all_next(string=True)
+                        if cell in x.parents and span not in x.parents
+                    ]
 
-                lines = cell.find_all(string=True)
                 body = ""
-                skip = True
                 for line in lines:
-                    if not skip:
-                        body += line.replace("\r", "").replace("\n", "") + "\n"
-                    if line.startswith("Klasse/n: "):
-                        skip = False
+                    body += line.replace("\r", "").replace("\n", "") + "\n"
 
             if new or (sent is not None and sent >= threshold):
                 letter = Letter(

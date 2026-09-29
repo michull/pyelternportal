@@ -225,55 +225,47 @@ DEMO_HTML_MESSAGE = """
 <!DOCTYPE html>
 <html>
 <body>
-<div class='' id='asam_content'>
-<div class='table-responsive'>
-<table width='100%' border='0' cellpadding='4' cellspacing='2' class='table2'>
-<tr><td align='left' valign='top' width='100%' class=''>Neue Nachrichten </td></tr>
-<tr><td align='left' valign='top' width='100%' style='border: none;'><small>Keine neuen Nachrichten.</small></td></tr>
+<table class="ui selectable table" id="messages-fachlehrer-table">
+<thead><tr><th>Name</th><th></th><th>Betreff</th><th>Letzte Nachricht</th></tr></thead>
+<tbody>
+<tr class="message-row" onclick="showMessageFachlehrer(1, 1)">
+<td>#NAME_D#, StR</td>
+<td title="Letzte Nachricht von Lehrkraft"><i class="blue share icon"></i></td>
+<td tabindex="0">Lernen lernen 5. Klasse</td>
+<td>#NOW#</td>
+</tr>
+</tbody>
 </table>
-</div>
-<div class='table-responsive'>
-<table width='100%' border='0' cellpadding='4' cellspacing='2' class='table2' style='margin-top: 30px;'>
-<tr><td align='left' valign='top' width='35%' class=''>Name</td><td align='left' valign='top' width='20%' class=''>F&auml;cher</td><td align='left' valign='top' width='35%' class=''>Kommunikation</td><td align='left' valign='top' width='10%' class=''></td></tr>
-<tr class=''><td colspan='2' align='left' valign='top' class='' style='border: none;'><a name='I' title='Namen mit I' style='color:#767206; font-weight: bold;' >I</a></td><td colspan='1' align='right' valign='middle' class='' style='border: none;'></td><td colspan='1' align='right' valign='middle' class='' style='border: none;'>&nbsp;</td></tr>
-<tr class=''><td align='left' valign='top' width='35%' class='' style='padding-top: 7px; padding-bottom: 7px;'>"#NAME_D#, StR</td><td align='left' valign='top' width='20%' class=''>D, E</td><td align='left' valign='top' width='35%' class=''><a href='meldungen/kommunikation_fachlehrer/1' title='Nachricht senden'>1 Anfrage</a><br /><img src='/includes/project/images/arrow_down.png' height='16' width='16' border='0' /> #NOW#</td><td align='center' valign='center' width='10%' class=''><a href='meldungen/kommunikation_fachlehrer/1' title='Nachricht senden'><img src='/includes/project/images/meldungen_gruen_20h.png' border='0' /></a></td></tr>
-</table>
-</div>
 </body>
 </html>
-""".replace("#NAME_D#", DEMO_NAME_D).replace("#NOW#", DEMO_NOW5)
-
-DEMO_HTML_MESSAGE_TEACHER = """
-<!DOCTYPE html>
-<html>
-<body>
-<div class='' id='asam_content'>
-<div class='form-group'><label class='col-lg-3 col-md-3 col-sm-2 col-xs-12 control-label' style=''><img src='/includes/project/images/arrow_down.png' height='16' width='16' border='0' /> #NOW#</label><div class='col-lg-6 col-md-7 col-sm-9 col-xs-12' style=''><a href='meldungen/kommunikation_fachlehrer/1/1' class='btn btn-default btn-block ' style='text-align: left; white-space: normal;' role='button'>Informationen Englisch</a></div></div>
-</div>
-</body>
-</html>
-""".replace("#NAME_D#", DEMO_NAME_D).replace("#NOW#", DEMO_NOW5)
+""".replace("#NAME_D#", DEMO_NAME_D).replace("#NOW#", DEMO_NOW5.replace(" ", ", "))
 
 DEMO_HTML_MESSAGE_DETAIL = """
 <!DOCTYPE html>
 <html>
-<body >
-<div class='' id='asam_content'>
-<div class='row'><div class='col-xs-12'><h2><img src='/includes/project/images/meldungen_gruen_20h.png' style='margin-right:10px;margin-bottom:10px;' />Kommunikation mit #NAME_D#</h2></div></div>
-<div class='row'><div class='col-lg-3 col-md-3 col-sm-2 col-xs-12 text-right bold' style='padding-bottom: 20px;'>Betreff:</div><div class='col-xs-12 col-sm-9 col-md-7 bold' id='betreff_set'>Lernen lernen 5. Klasse</div></div>
-<div class='row'><div class='col-lg-3 col-md-3 col-sm-2 col-xs-12 text-right bold' style='padding-bottom: 20px;'>Für:</div><div class='col-xs-12 col-sm-9 col-md-7 bold' id='betreff_set'>Johanna Ullrich</div></div>
-<div id='last_messages'>
-<div class='row' style='margin-bottom: 22px;'><label class='col-lg-3 col-md-3 col-sm-2 col-xs-12 control-label text-right'>
-<span class='link_buchungen'>#NAME_D#</span>:<br><small style='font-weight: normal'>(#TODAY#)&nbsp;</small></label>
-<div class='col-lg-6 col-md-7 col-sm-9 col-xs-12'>
-<div class='form-control arch_kom' rows='2' maxlength='256' style='height: 100%;cursor:pointer'>Liebe Eltern und Erziehungsberechtigte,<br />
-<br />
-heute habe ich die erste Einheit zum Lernen lernen in der 5a durchgeführt.<br />
-Wir haben allgemeine Schwierigkeiten des Schulalltags besprochen und Lösungen erörtert (Arbeitsblatt 1). Außerdem haben wir einen Wochenplan erstellt (Arbeitsblatt 2), in dem die Schülerinnen und Schüler ihre fixen Termine und mögliche Lernzeiten eingetragen haben. Auf der Rückseite finden Sie einen leeren Wochenplan als Kopiervorlage, falls sich die Termine ändern sollten und Sie erneut einen Wochenplan erstellen möchten.<br />
-Die Schülerinnen und Schüler sollen die Arbeitsblätter in ihren Lernen lernen Schnellhefter (Farbe schwarz) abheften. Gerne können Sie die Inhalte nochmal mit Ihrem Kind durchsprechen.<br />
-<br />
-Liebe Grüße<br />
-#NAME_D#</div></div></div></div>
+<body>
+<h2>Kommunikation mit #NAME_D#</h2>
+<div class="ui grid" id="message-thread-grid">
+<div class="row">
+<div class="four wide right aligned column"><strong>Betreff:</strong></div>
+<div class="twelve wide column"><strong>Lernen lernen 5. Klasse</strong></div>
+</div>
+<div class="row">
+<div class="four wide right aligned column"><strong>Für:</strong></div>
+<div class="twelve wide column"><strong>Johanna Ullrich</strong></div>
+</div>
+<div class="row">
+<div class="four wide right aligned column"><strong><span class="ui orange text">#NAME_D#</span>:</strong><br/>(#TODAY#)</div>
+<div class="twelve wide column"><div class="ui segment">Liebe Eltern und Erziehungsberechtigte,<br/>
+<br/>
+heute habe ich die erste Einheit zum Lernen lernen in der 5a durchgeführt.<br/>
+Wir haben allgemeine Schwierigkeiten des Schulalltags besprochen und Lösungen erörtert (Arbeitsblatt 1). Außerdem haben wir einen Wochenplan erstellt (Arbeitsblatt 2), in dem die Schülerinnen und Schüler ihre fixen Termine und mögliche Lernzeiten eingetragen haben. Auf der Rückseite finden Sie einen leeren Wochenplan als Kopiervorlage, falls sich die Termine ändern sollten und Sie erneut einen Wochenplan erstellen möchten.<br/>
+Die Schülerinnen und Schüler sollen die Arbeitsblätter in ihren Lernen lernen Schnellhefter (Farbe schwarz) abheften. Gerne können Sie die Inhalte nochmal mit Ihrem Kind durchsprechen.<br/>
+<br/>
+Liebe Grüße<br/>
+#NAME_D#</div></div>
+</div>
+</div>
 </body>
 </html>
 """.replace("#NAME_D#", DEMO_NAME_D).replace("#TODAY#", DEMO_TODAY)

@@ -87,7 +87,6 @@ from .demo import (
     DEMO_HTML_LOGIN,
     DEMO_HTML_LOGOUT,
     DEMO_HTML_MESSAGE,
-    DEMO_HTML_MESSAGE_TEACHER,
     DEMO_HTML_MESSAGE_DETAIL,
     DEMO_HTML_POLL,
     DEMO_HTML_POLL_DETAIL,
@@ -945,97 +944,66 @@ class ElternPortalAPI:
     async def async_message_parse(self, html: str) -> None:
         """Elternportal message (parse)."""
 
+        threshold = datetime.now() + timedelta(days=self.message_threshold)
         self._student.messages = []
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
-        rows = soup.select(
-            "#asam_content div.table-responsive:nth-child(2) table.table2 tr"
-        )
+        rows = soup.select("#messages-fachlehrer-table tbody tr.message-row")
         for row in rows:
-            tag = row.select_one("tr td:nth-child(3) a")
-            href = parse.urljoin("/", tag["href"]) if tag else None
+            cells = row.find_all("td", recursive=False)
+            match = re.search(
+                r"showMessageFachlehrer\((\d+),\s*(\d+)\)", row.get("onclick", "")
+            )
+            if len(cells) < 4 or match is None:
+                continue
 
-            if href is None:
-                pass
-            else:
-                if self._demo:
-                    await self.async_message_teacher_demo()
+            sender = cells[0].get_text(strip=True)
+            subject = cells[2].get_text(strip=True)
+
+            # the portal's date format changes: parse date and time separately
+            sent = None
+            text = cells[3].get_text()
+            match_date = re.search(r"\d{2}\.\d{2}\.\d{4}", text)
+            if match_date:
+                match_time = re.search(r"\d{2}:\d{2}", text)
+                if match_time:
+                    sent = datetime.strptime(
+                        f"{match_date[0]} {match_time[0]}", "%d.%m.%Y %H:%M"
+                    )
                 else:
-                    await self.async_message_teacher_online(href)
+                    sent = datetime.strptime(match_date[0], "%d.%m.%Y")
 
-    async def async_message_teacher_demo(self) -> None:
-        """Elternportal message teacher (demo)."""
-        await self.async_message_teacher_parse(DEMO_HTML_MESSAGE_TEACHER)
+            if sent is not None and sent < threshold:
+                continue
 
-    async def async_message_teacher_online(self, url_path) -> None:
-        """Elternportal message teacher (online)."""
+            new = False  # FixMe
 
-        url = parse.urljoin(self.base_url, url_path)
-        LOGGER.debug("message.teacher.url=%s", url)
-        async with self._session.get(url) as response:
-            if response.status != 200:
-                LOGGER.debug("message.teacher.status=%s", response.status)
-            html = await response.text()
-            await self.async_message_teacher_parse(html)
-
-    async def async_message_teacher_parse(self, html: str) -> None:
-        """Elternportal message teacher (parse)."""
-
-        threshold = datetime.now() + timedelta(days=self.message_threshold)
-        soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
-
-        tags = soup.select(
-            "#asam_content a.btn.btn-default.btn-block[href^='meldungen/kommunikation_fachlehrer/']"
-        )
-        for tag in tags:
-            href = parse.urljoin("/", tag["href"])
-
-            if href is None:
-                sent = None
-                new = False
-                sender = None
-                subject = None
-                body = None
+            if self._demo:
+                (subject_detail, body) = await self.async_message_detail_demo()
             else:
-                sent = None
-                label = tag.parent.parent.select_one("label")
-                if label:
-                    match = re.search(
-                        r"\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}", label.get_text()
-                    )
-                    sent = (
-                        datetime.strptime(match[0], "%d.%m.%Y %H:%M") if match else None
-                    )
+                url_path = f"/meldungen/kommunikation_fachlehrer/{match[1]}/{match[2]}"
+                (subject_detail, body) = await self.async_message_detail_online(
+                    url_path
+                )
+            if subject_detail:
+                subject = subject_detail
 
-                new = False  # FixMe
+            message = Message(
+                sender=sender,
+                sent=sent,
+                new=new,
+                subject=subject,
+                body=body,
+            )
+            self._student.messages.append(message)
 
-                if self._demo:
-                    (sender, subject, body) = await self.async_message_detail_demo()
-                else:
-                    (sender, subject, body) = await self.async_message_detail_online(
-                        href
-                    )
+        self._student.messages.sort(key=lambda message: message.sent or datetime.min)
 
-                if sent >= threshold:
-                    message = Message(
-                        sender=sender,
-                        sent=sent,
-                        new=new,
-                        subject=subject,
-                        body=body,
-                    )
-                    self._student.messages.append(message)
-
-        self._student.messages.sort(key=lambda message: message.sent)
-
-    async def async_message_detail_demo(self) -> tuple[str, str, str]:
+    async def async_message_detail_demo(self) -> tuple[str, str]:
         """Elternportal message detail (demo)."""
-        (sender, subject, body) = await self.async_message_detail_parse(
-            DEMO_HTML_MESSAGE_DETAIL
-        )
-        return (sender, subject, body)
+        return await self.async_message_detail_parse(DEMO_HTML_MESSAGE_DETAIL)
 
-    async def async_message_detail_online(self, url_path: str) -> tuple[str, str, str]:
+    async def async_message_detail_online(self, url_path: str) -> tuple[str, str]:
         """Elternportal message detail (online)."""
 
         url = parse.urljoin(self.base_url, url_path)
@@ -1044,24 +1012,33 @@ class ElternPortalAPI:
             if response.status != 200:
                 LOGGER.debug("message.detail.status=%s", response.status)
             html = await response.text()
+            return await self.async_message_detail_parse(html)
 
-            (sender, subject, body) = await self.async_message_detail_parse(html)
-            return (sender, subject, body)
-
-    async def async_message_detail_parse(self, html: str) -> tuple[str, str, str]:
-        """Elternportal message detail (parse)."""
+    async def async_message_detail_parse(self, html: str) -> tuple[str, str]:
+        """Elternportal message detail (parse): subject and body of the last message."""
 
         soup = bs4.BeautifulSoup(html, self._beautiful_soup_parser)
 
-        tag = soup.select_one("#asam_content div.row:nth-child(2) div:nth-child(2)")
-        subject = tag.get_text().strip() if tag else None
+        subject = None
+        body = None
+        for row in soup.select("#message-thread-grid > div.row"):
+            cols = row.find_all("div", recursive=False)
+            if len(cols) < 2:
+                continue
 
-        tag = soup.select_one("#asam_content div.row label span")
-        sender = tag.get_text().strip() if tag else None
+            if cols[0].get_text(strip=True).startswith("Betreff"):
+                subject = cols[1].get_text(strip=True)
 
-        tag = soup.select_one("#asam_content div.row div.form-control.arch_kom")
-        body = tag.get_text() if tag else None
-        return (sender, subject, body)
+            tag = cols[1].select_one("div.ui.segment")
+            if tag:
+                # collapse source whitespace (incl. nbsp) like a browser, then turn <br> into newlines
+                for text in tag.find_all(string=True):
+                    text.replace_with(re.sub(r"\s+", " ", text))
+                for br in tag.find_all("br"):
+                    br.replace_with("\n")
+                body = re.sub(r" *\n *", "\n", tag.get_text())
+                body = re.sub(r"\n{3,}", "\n\n", body).strip()
+        return (subject, body)
 
     async def async_poll_demo(self) -> None:
         """Elternportal poll (demo)."""

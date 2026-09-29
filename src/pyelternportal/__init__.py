@@ -838,11 +838,16 @@ class ElternPortalAPI:
             attachment = tag.name == "a"
 
             # sent
-            text = tag.get_text()
-            date_match = re.search(r"\d{2}\.\d{2}\.\d{4}", text)
-            sent_date = date_match[0] if date_match else None
-            time_match = re.search(r"\d{2}:\d{2}", text)
-            sent_time = time_match[0] if time_match else None
+            # the subject (<h4>) may contain a date or time, so search without it
+            text = " ".join(s for s in tag.find_all(string=True) if s.find_parent("h4") is None)
+            stamp = re.search(r"(\d{2}\.\d{2}\.\d{4}),?\s+(\d{2}:\d{2})", text)
+            if stamp:
+                sent_date, sent_time = stamp.groups()
+            else:
+                # the portal's format changes: tolerate a missing time or an unparseable date
+                date_match = re.search(r"\d{2}\.\d{2}\.\d{4}", text)
+                sent_date = date_match[0] if date_match else None
+                sent_time = None
 
             if sent_date is None:
                 sent = None

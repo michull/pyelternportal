@@ -857,7 +857,7 @@ class ElternPortalAPI:
                 new = True
                 number = "???"
             else:
-                new = cell.get_text() == "Empfang noch nicht bestätigt."
+                new = " ".join(cell.get_text().split()) == "Empfang noch nicht bestätigt."
                 cell2 = cell.find_previous_sibling()
                 if cell2 is None:
                     number = "???"

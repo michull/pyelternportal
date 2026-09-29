@@ -96,7 +96,7 @@ from .demo import (
     DEMO_JSON_APPOINTMENT,
 )
 
-VERSION = "0.0.24"
+VERSION = "0.0.25"
 
 
 class ElternPortalAPI:

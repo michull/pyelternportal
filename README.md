@@ -91,6 +91,7 @@ Set the optional configuration.
 | `poll`        | `bool` | `False` | Get data of page "aktuelles/umfragen"?
 | `register`    | `bool` | `False` | Get data of page "service/klassenbuch"?
 | `sicknote`    | `bool` | `False` | Get data of page "meldungen/krankmeldung"?
+| `substitution` | `bool` | `False` | Get data of page "service/vertretungsplan"?
 
 
 #### `set_option_threshold`
@@ -104,6 +105,7 @@ Set the optional threshold values.
 | `message_threshold`     | `int`  |   -7    | Treshold value (relative to today) for message sent
 | `register_threshold`    | `int`  |   +0    | Treshold value (relative to today) for register completion
 | `sicknote_threshold`    | `int`  |   -7    | Treshold value (relative to today) for sick note end
+| `substitution_threshold` | `int` |   +0    | Treshold value (relative to today) for substitution date
 
 
 #### `set_option_register`
@@ -156,6 +158,7 @@ Set the option data via a dictionary object.
 | `polls`        | `list[Poll]`        | List of polls (only if option `poll` was set)
 | `registers`    | `list[Register]`    | List of registers (only if option `register` was set)
 | `sicknotes`    | `list[SickNote]`    | List of sick notes (only if option `sicknote` was set)
+| `substitutions` | `list[Substitution]` | List of substitutions (only if option `substitution` was set)
 
 
 ### Appointment
@@ -243,6 +246,18 @@ Set the option data via a dictionary object.
 | `start`   | `datetime.date` | Start date
 | `end`     | `datetime.date` | End date
 | `comment` | `str`           | Comment
+
+
+### Substitution
+
+| Property             | Type            | Description
+| :------------------- | :-------------- | :----------
+| `date`               | `datetime.date` | Date
+| `lesson`             | `str`           | Lesson (e.g. `3`)
+| `original_teacher`   | `str`           | Teacher concerned (column "Betrifft.")
+| `substitute_teacher` | `str`           | Substitute teacher (empty if the lesson is cancelled)
+| `room`               | `str`           | Room
+| `info`               | `str`           | Info (e.g. "Raumänderung", "entfällt")
 
 
 ### Attachment

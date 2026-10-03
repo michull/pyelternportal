@@ -284,14 +284,13 @@ DEMO_HTML_SUBSTITUTION = (
 					<tbody>
 						<tr class="vp_plan_head">
 							<td width="10%" align="left" class="table_header text-center">Std.</td>
-							<td width="15%" align="left" class="table_header text-center">Betrifft.</td>
-							<td width="15%" align="left" class="table_header text-center">Vertretung</td>
-							<td width="15%" align="left" class="table_header text-center">Fach</td>
-							<td width="15%" align="left" class="table_header text-center">Raum</td>
-							<td width="30%" align="left" class="table_header text-center">Info</td>
+							<td width="18%" align="left" class="table_header text-center">Betrifft.</td>
+							<td width="18%" align="left" class="table_header text-center">Vertretung</td>
+							<td width="18%" align="left" class="table_header text-center">Raum</td>
+							<td width="36%" align="left" class="table_header text-center">Info</td>
 						</tr>
 						<tr class="">
-							<td width="100%" colspan="6" align="center" valign="top">Keine Vertretungen für die 5a</td>
+							<td width="100%" colspan="5" align="center" valign="top">Keine Vertretungen für die 5a</td>
 						</tr>
 					</tbody>
 				</table>
@@ -300,37 +299,31 @@ DEMO_HTML_SUBSTITUTION = (
 					<tbody>
 						<tr class="vp_plan_head">
 							<td width="10%" align="left" class="table_header text-center">Std.</td>
-							<td width="15%" align="left" class="table_header text-center">Betrifft.</td>
-							<td width="15%" align="left" class="table_header text-center">Vertretung</td>
-							<td width="15%" align="left" class="table_header text-center">Fach</td>
-							<td width="15%" align="left" class="table_header text-center">Raum</td>
-							<td width="30%" align="left" class="table_header text-center">Info</td>
+							<td width="18%" align="left" class="table_header text-center">Betrifft.</td>
+							<td width="18%" align="left" class="table_header text-center">Vertretung</td>
+							<td width="18%" align="left" class="table_header text-center">Raum</td>
+							<td width="36%" align="left" class="table_header text-center">Info</td>
 						</tr>
 						<tr class="liste_grau">
 							<td width="10%" align="left" class="text_center">1.</td>
-							<td width="15%" align="left" class="text_center">#NAME_D#</td>
-							<td width="15%" align="left" class="text_center">#NAME_K#</td>
-							<td width="15%" align="left" class="text_center">NuT</td>
-							<td width="15%" align="left" class="text_center">N106</td>
-							<td width="30%" align="left" class="text-center">Raumänderung</td>
+							<td width="18%" align="left" class="text_center">#NAME_D#</td>
+							<td width="18%" align="left" class="text_center">#NAME_K#</td>
+							<td width="18%" align="left" class="text_center">N106</td>
+							<td width="36%" align="left" class="text-center">Raumänderung</td>
 						</tr>
 						<tr class="liste_weiss">
 							<td width="10%" align="left" class="text_center">3.</td>
-							<td width="15%" align="left" class="text_center">#NAME_D#</td>
-							<td width="15%" align="left" class="text_center">#NAME_E#</td>
-							<td width="15%" align="left" class="text_center">
-								<span style="text-decoration: line-through;">&nbsp;D&nbsp;</span> D</td>
-							<td width="15%" align="left" class="text_center">Bib</td>
-							<td width="30%" align="left" class="text-center">Raumänderung: Bibliotheksführung</td>
+							<td width="18%" align="left" class="text_center">#NAME_D#</td>
+							<td width="18%" align="left" class="text_center">#NAME_E#</td>
+							<td width="18%" align="left" class="text_center">Bib</td>
+							<td width="36%" align="left" class="text-center">Raumänderung: Bibliotheksführung</td>
 						</tr>
 						<tr class="liste_grau">
 							<td width="10%" align="left" class="text_center">4.</td>
-							<td width="15%" align="left" class="text_center">#NAME_E#</td>
-							<td width="15%" align="left" class="text_center">#NAME_M#</td>
-							<td width="15%" align="left" class="text_center">
-								<span style="text-decoration: line-through;">&nbsp;D&nbsp;</span> D</td>
-							<td width="15%" align="left" class="text_center">Bib</td>
-							<td width="30%" align="left" class="text-center">Raumänderung: Bibliotheksführung</td>
+							<td width="18%" align="left" class="text_center">#NAME_E#</td>
+							<td width="18%" align="left" class="text_center">#NAME_M#</td>
+							<td width="18%" align="left" class="text_center">Bib</td>
+							<td width="36%" align="left" class="text-center">Raumänderung: Bibliotheksführung</td>
 						</tr>
 					</tbody>
 				</table>
@@ -339,20 +332,17 @@ DEMO_HTML_SUBSTITUTION = (
 					<tbody>
 						<tr class="vp_plan_head">
 							<td width="10%" align="left" class="table_header text-center">Std.</td>
-							<td width="15%" align="left" class="table_header text-center">Betrifft.</td>
-							<td width="15%" align="left" class="table_header text-center">Vertretung</td>
-							<td width="15%" align="left" class="table_header text-center">Fach</td>
-							<td width="15%" align="left" class="table_header text-center">Raum</td>
-							<td width="30%" align="left" class="table_header text-center">Info</td>
+							<td width="18%" align="left" class="table_header text-center">Betrifft.</td>
+							<td width="18%" align="left" class="table_header text-center">Vertretung</td>
+							<td width="18%" align="left" class="table_header text-center">Raum</td>
+							<td width="36%" align="left" class="table_header text-center">Info</td>
 						</tr>
 						<tr class="liste_grau">
 							<td width="10%" align="left" class="text_center">2.</td>
-							<td width="15%" align="left" class="text_center">#NAME_K#</td>
-							<td width="15%" align="left" class="text_center">#NAME_K#</td>
-							<td width="15%" align="left" class="text_center">
-								<span style="text-decoration: line-through;">&nbsp;M&nbsp;</span> M</td>
-							<td width="15%" align="left" class="text_center">N101</td>
-							<td width="30%" align="left" class="text-center">Sondereinsatz: Schulwegtraining, Treffpunkt Klassenzimmer</td>
+							<td width="18%" align="left" class="text_center">#NAME_K#</td>
+							<td width="18%" align="left" class="text_center">#NAME_K#</td>
+							<td width="18%" align="left" class="text_center">N101</td>
+							<td width="36%" align="left" class="text-center">Sondereinsatz: Schulwegtraining, Treffpunkt Klassenzimmer</td>
 						</tr>
 					</tbody>
 				</table>
@@ -361,14 +351,13 @@ DEMO_HTML_SUBSTITUTION = (
 					<tbody>
 						<tr class="vp_plan_head">
 							<td width="10%" align="left" class="table_header text-center">Std.</td>
-							<td width="15%" align="left" class="table_header text-center">Betrifft.</td>
-							<td width="15%" align="left" class="table_header text-center">Vertretung</td>
-							<td width="15%" align="left" class="table_header text-center">Fach</td>
-							<td width="15%" align="left" class="table_header text-center">Raum</td>
-							<td width="30%" align="left" class="table_header text-center">Info</td>
+							<td width="18%" align="left" class="table_header text-center">Betrifft.</td>
+							<td width="18%" align="left" class="table_header text-center">Vertretung</td>
+							<td width="18%" align="left" class="table_header text-center">Raum</td>
+							<td width="36%" align="left" class="table_header text-center">Info</td>
 						</tr>
 						<tr class="">
-							<td width="100%" colspan="6" align="center" valign="top">Keine Vertretungen für die 5a</td>
+							<td width="100%" colspan="5" align="center" valign="top">Keine Vertretungen für die 5a</td>
 						</tr>
 					</tbody>
 				</table>
@@ -377,19 +366,17 @@ DEMO_HTML_SUBSTITUTION = (
 					<tbody>
 						<tr class="vp_plan_head">
 							<td width="10%" align="left" class="table_header text-center">Std.</td>
-							<td width="15%" align="left" class="table_header text-center">Betrifft.</td>
-							<td width="15%" align="left" class="table_header text-center">Vertretung</td>
-							<td width="15%" align="left" class="table_header text-center">Fach</td>
-							<td width="15%" align="left" class="table_header text-center">Raum</td>
-							<td width="30%" align="left" class="table_header text-center">Info</td>
+							<td width="18%" align="left" class="table_header text-center">Betrifft.</td>
+							<td width="18%" align="left" class="table_header text-center">Vertretung</td>
+							<td width="18%" align="left" class="table_header text-center">Raum</td>
+							<td width="36%" align="left" class="table_header text-center">Info</td>
 						</tr>
 						<tr class="liste_grau">
 							<td width="10%" align="left" class="text_center">6.</td>
-							<td width="15%" align="left" class="text_center">#NAME_M#</td>
-							<td width="15%" align="left" class="text_center">&nbsp;</td>
-							<td width="15%" align="left" class="text_center">E</td>
-							<td width="15%" align="left" class="text_center">N101</td>
-							<td width="30%" align="left" class="text-center">entfällt</td>
+							<td width="18%" align="left" class="text_center">#NAME_M#</td>
+							<td width="18%" align="left" class="text_center">&nbsp;</td>
+							<td width="18%" align="left" class="text_center">N101</td>
+							<td width="36%" align="left" class="text-center">entfällt</td>
 						</tr>
 					</tbody>
 				</table>

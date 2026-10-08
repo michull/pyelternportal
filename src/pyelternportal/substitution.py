@@ -11,5 +11,7 @@ class Substitution:
     lesson: str
     original_teacher: str
     substitute_teacher: str
+    subject_old: str
+    subject_new: str
     room: str
     info: str

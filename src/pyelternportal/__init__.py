@@ -1405,18 +1405,31 @@ class ElternPortalAPI:
                 rows = tag.select("tbody tr:not(.vp_plan_head)")
                 for row in rows:
                     cells = row.find_all("td")
-                    if len(cells) == 5:
+                    if len(cells) == 5 or len(cells) == 6:
                         lesson = cells[0].get_text(strip=True).removesuffix(".")
                         original_teacher = cells[1].get_text(strip=True)
                         substitute_teacher = cells[2].get_text(strip=True)
-                        room = cells[3].get_text(strip=True)
-                        info = cells[4].get_text(strip=True)
+                        subject_old = ""
+                        subject_new = ""
+                        if len(cells) == 6:
+                            subject_cell = cells[3]
+                            subject_old = "".join(
+                                span.get_text()
+                                for span in subject_cell.select("span[style*='line-through']")
+                            ).strip()
+                            for span in subject_cell.select("span[style*='line-through']"):
+                                span.extract()
+                            subject_new = subject_cell.get_text().strip()
+                        room = cells[len(cells)-2].get_text(strip=True)
+                        info = cells[len(cells)-1].get_text(strip=True)
 
                         substitution = Substitution(
                             date=current_date,
                             lesson=lesson,
                             original_teacher=original_teacher,
                             substitute_teacher=substitute_teacher,
+                            subject_old=subject_old,
+                            subject_new=subject_new,
                             room=room,
                             info=info,
                         )

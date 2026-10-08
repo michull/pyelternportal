@@ -256,6 +256,8 @@ Set the option data via a dictionary object.
 | `lesson`             | `str`           | Lesson (e.g. `3`)
 | `original_teacher`   | `str`           | Teacher concerned (column "Betrifft.")
 | `substitute_teacher` | `str`           | Substitute teacher (empty if the lesson is cancelled)
+| `subject_old`        | `str`           | Original subject, struck through in column "Fach" (empty if none)
+| `subject_new`        | `str`           | Subject in column "Fach" (empty if the portal has no such column)
 | `room`               | `str`           | Room
 | `info`               | `str`           | Info (e.g. "Raumänderung", "entfällt")
 

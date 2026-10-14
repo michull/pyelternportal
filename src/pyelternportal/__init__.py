@@ -77,7 +77,7 @@ from .poll import Poll
 from .student import Student
 from .register import Register
 from .sicknote import SickNote
-from .substitution import Substitution
+from .substitution import Substitution, cell2text, tag2columns
 
 from .demo import (
     DEMO_HTML_BASE,
@@ -1402,17 +1402,32 @@ class ElternPortalAPI:
                     current_date = datetime.strptime(match.group(1), "%d.%m.%Y").date()
 
             elif tag.name == "table" and current_date and current_date >= threshold:
+                headtag = tag.select_one("tr.vp_plan_head")
+                headcolumns = tag2columns(headtag)
                 rows = tag.select("tbody tr:not(.vp_plan_head)")
                 for row in rows:
                     cells = row.find_all("td")
-                    if len(cells) == 5 or len(cells) == 6:
-                        lesson = cells[0].get_text(strip=True).removesuffix(".")
-                        original_teacher = cells[1].get_text(strip=True)
-                        substitute_teacher = cells[2].get_text(strip=True)
+                    columns = None
+                    if headcolumns and len(cells) == len(headtag.find_all("td")):
+                        columns = headcolumns
+                    elif len(cells) == 5 or len(cells) == 6:
+                        columns = {
+                            "lesson": 0,
+                            "original_teacher": 1,
+                            "substitute_teacher": 2,
+                            "room": len(cells)-2,
+                            "info": len(cells)-1,
+                        }
+                        if len(cells) == 6:
+                            columns["subject"] = 3
+                    if columns:
+                        lesson = cell2text(cells, columns, "lesson").removesuffix(".")
+                        original_teacher = cell2text(cells, columns, "original_teacher")
+                        substitute_teacher = cell2text(cells, columns, "substitute_teacher")
                         subject_old = ""
                         subject_new = ""
-                        if len(cells) == 6:
-                            subject_cell = cells[3]
+                        if "subject" in columns:
+                            subject_cell = cells[columns["subject"]]
                             subject_old = "".join(
                                 span.get_text()
                                 for span in subject_cell.select("span[style*='line-through']")
@@ -1420,8 +1435,8 @@ class ElternPortalAPI:
                             for span in subject_cell.select("span[style*='line-through']"):
                                 span.extract()
                             subject_new = subject_cell.get_text().strip()
-                        room = cells[len(cells)-2].get_text(strip=True)
-                        info = cells[len(cells)-1].get_text(strip=True)
+                        room = cell2text(cells, columns, "room")
+                        info = cell2text(cells, columns, "info")
 
                         substitution = Substitution(
                             date=current_date,

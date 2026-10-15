@@ -1402,17 +1402,31 @@ class ElternPortalAPI:
                     current_date = datetime.strptime(match.group(1), "%d.%m.%Y").date()
 
             elif tag.name == "table" and current_date and current_date >= threshold:
+                columns = {}
+                head = tag.select_one("tr.vp_plan_head")
+                if head:
+                    for index, cell in enumerate(head.find_all("td")):
+                        name = cell.get_text(strip=True).removesuffix(".").lower()
+                        columns[name] = index
+                if not columns:
+                    continue
+
                 rows = tag.select("tbody tr:not(.vp_plan_head)")
                 for row in rows:
                     cells = row.find_all("td")
-                    if len(cells) == 5 or len(cells) == 6:
-                        lesson = cells[0].get_text(strip=True).removesuffix(".")
-                        original_teacher = cells[1].get_text(strip=True)
-                        substitute_teacher = cells[2].get_text(strip=True)
+                    if len(cells) == len(columns):
+
+                        def text(name: str) -> str:
+                            index = columns.get(name)
+                            return cells[index].get_text(strip=True) if index is not None else ""
+
+                        lesson = text("std").removesuffix(".")
+                        original_teacher = text("betrifft")
+                        substitute_teacher = text("vertretung")
                         subject_old = ""
                         subject_new = ""
-                        if len(cells) == 6:
-                            subject_cell = cells[3]
+                        if "fach" in columns:
+                            subject_cell = cells[columns["fach"]]
                             subject_old = "".join(
                                 span.get_text()
                                 for span in subject_cell.select("span[style*='line-through']")
@@ -1420,8 +1434,8 @@ class ElternPortalAPI:
                             for span in subject_cell.select("span[style*='line-through']"):
                                 span.extract()
                             subject_new = subject_cell.get_text().strip()
-                        room = cells[len(cells)-2].get_text(strip=True)
-                        info = cells[len(cells)-1].get_text(strip=True)
+                        room = text("raum")
+                        info = text("info")
 
                         substitution = Substitution(
                             date=current_date,

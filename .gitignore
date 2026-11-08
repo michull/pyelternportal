@@ -10,3 +10,8 @@ dist/
 # Test
 setup.py
 test*.py
+
+!tests/test_counts.py
+.coverage
+coverage.json
+.pytest_cache/

@@ -8,6 +8,10 @@
 
 Python client library to retrieve data provided by eltern-portal.org
 
+## Python support
+
+Python 3.13 and 3.14 are tested in CI. Python 3.13 remains the minimum version.
+
 ## Install
 ```
 pip install pyelternportal

@@ -10,3 +10,6 @@ dist/
 # Test
 setup.py
 test*.py
+
+# Compatibility smoke test
+!tests/test_python_compatibility.py

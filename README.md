@@ -44,6 +44,10 @@ for student in api.students:
         print(f"\tsubject:\t{letter.subject}")
 ```
 
+## Teacher-message counts
+
+An optional [message-count client](docs/MESSAGE_COUNTS.md) fetches per-child teacher-message thread counts without opening message details or attachments.
+
 ## API
 
 

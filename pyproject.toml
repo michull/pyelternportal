@@ -5,6 +5,8 @@ build-backend = "hatchling.build"
 [project]
 name = "pyelternportal"
 version = "0.0.28"
+license = "Unlicense AND MIT"
+license-files = ["LICENSE", "LICENSE.extensions"]
 authors = [
   { name="michull", email="michull@github.com" },
 ]
@@ -16,7 +18,6 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: The Unlicense (Unlicense)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.13"
 ]
@@ -36,7 +37,6 @@ exclude = [
     "/.github",
     "/.vs",
     "/docs",
-    "/tests",
     "/*.pyproj",
     "/*.sln",
     "/test*.py",
